@@ -14,6 +14,12 @@ Route::controller(SocialiteController::class)->group(function () {
     Route::get('auth/google','googleLogin')->name('auth.google');
 Route::get('auth/google-callback','googleAuthenticationCallback')->name('auth.google-callback');
 });
+
+Route::controller(SocialiteController::class)->group((function () {
+    Route::get('auth/linkedin','linkedInLogin')->name('auth.linkedin');
+    Route::get('auth/linkedin-callback', 'linkedInAuthenticationCallback')->name('auth.linkedin-callback');
+}));
+
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');

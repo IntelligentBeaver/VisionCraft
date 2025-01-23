@@ -48,6 +48,43 @@ class SocialiteController extends Controller
         } catch (Exception $e) {
             dd($e);
         }
+    }
 
+    public function linkedInLogin()
+    {
+        return Socialite::driver('linkedin-openid')->redirect();
+    }
+
+    public function linkedInAuthenticationCallback()
+    {
+        try {
+            $linkedinUser = Socialite::driver('linkedin-openid')->user();
+
+            $user = User::where('linkedin_id', $linkedinUser->id)->first();
+            if ($user) {
+                //User is already registered, login him in
+                Auth::login($user);
+                return redirect()->route('dashboard');
+            } else {
+                //User is not registered, create him in the database
+                $userData = User::create([
+                    'name' => $linkedinUser->name,
+                    'email' => $linkedinUser->email,
+                    'password' => Hash::make('Password@1234'), //You can add your own password hashing here if you want. For now, we're using bcrypt.
+                    'linkedin_id' => $linkedinUser->id,
+                ]);
+                if ($userData) {
+                    //User created successfully, login him in
+                    Auth::login($userData);
+                    return redirect()->route('dashboard');
+                }
+            }
+            //Login the user
+            Auth::login($user);
+            return redirect()->route('dashboard');
+
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 }

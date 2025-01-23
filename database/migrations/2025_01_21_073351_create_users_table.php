@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('age')->nullable();
             $table->string('location')->nullable();
             $table->string('google_id')->nullable();
+            $table->string('linkedin_id')->nullable();
             $table->string('skills')->nullable();
             $table->string('education')->nullable();
             $table->string('experience')->nullable();

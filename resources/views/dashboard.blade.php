@@ -3,6 +3,8 @@
 @section('content')
     <div>
         This is Dashboard Page.
+
+        You are {{ Auth::user()->name }}
         <div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

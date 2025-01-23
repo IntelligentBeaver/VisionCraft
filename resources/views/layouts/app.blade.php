@@ -21,10 +21,10 @@
     </head>
 
     <body class="font-sans antialiased">
-        <nav class="bg-base-200 px-4 py-6">
-            <div class="container mx-auto flex justify-between">
+        <nav class="bg-base-100 px-4 py-6">
+            <div class="container mx-auto flex items-center justify-between">
                 <a class="font-bold" href="/" wire:navigate>
-                    <img src="{{ public_path('images/logo.png') }}" alt="Logo">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" width="50" height="30">
                 </a>
                 <div>
                     @auth
@@ -43,6 +43,12 @@
         <main class="mx-auto">
             @yield('content')
         </main>
+        <!-- Footer -->
+        <footer class="bg-gray-900 px-8 py-6 text-white">
+            <div class="text-center">
+                <p class="text-sm">© BrandName. All rights reserved.</p>
+            </div>
+        </footer>
         @livewireScripts
 
 

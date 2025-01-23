@@ -67,6 +67,11 @@
                     Sign in with Google
                 </button>
             </a>
+            <a class="block" href="{{ route('auth.linkedin') }}">
+                <button class="login-with-google-btn" type="button">
+                    Sign in with LinkedIn
+                </button>
+            </a>
         </div>
     </form>
 </div>
