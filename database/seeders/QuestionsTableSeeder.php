@@ -23,7 +23,7 @@ class QuestionsTableSeeder extends Seeder
         $industryAreaCategoryId = DB::table('categories')->where('category_name', 'industry area')->value('id');
         DB::table('questions')->insert([
             [
-                'question_text' => 'irst off, what are some of the things you genuinely enjoy doing in your free time or in past projects?',
+                'question_text' => 'First off, what are some of the things you genuinely enjoy doing in your free time or in past projects?',
                 'question_type' => 'text',
 
                 'category_id' => $skillsCategoryId,

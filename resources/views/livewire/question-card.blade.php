@@ -7,7 +7,24 @@
         <!-- Question -->
         <div class="card-body">
             <h2 class="card-title text-lg font-bold">Question {{ $currentQuestionIndex + 1 }}</h2>
-            <p class="mb-4">{{ $question->question_text }}</p>
+            <p class="">{{ $question->question_text }}</p>
+
+
+            <!-- Answer Options -->
+            <div class="my-4">
+                @if ($types[$currentQuestionIndex] == 'text')
+                    <input class="input input-bordered w-full" type="text"
+                        wire:model.blur="Question {{ $currentQuestionIndex }}" placeholder="Answer" />
+                @elseif ($types[$currentQuestionIndex] == 'select')
+                    <select class="select select-bordered w-full" wire:model.change="q1">
+                        <option value="Select" disabled selected>Select</option>
+                        <option value="Example">Example</option>
+                    </select>
+                @else
+                    <input class="input input-bordered w-full" type="text"
+                        wire:model.blur="Question {{ $currentQuestionIndex }}" placeholder="Answer.." />
+                @endif
+            </div>
 
             <!-- Navigation Buttons -->
             <div class="card-actions justify-between">

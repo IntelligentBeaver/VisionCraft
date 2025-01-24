@@ -37,6 +37,7 @@ class QuestionCard extends Component
         'progress' => $this->questions->count() > 0 
             ? (($this->currentQuestionIndex + 1) / $this->questions->count() * 100) 
             : 0,
+            'types'=>$this->questions->pluck('question_type'),
     ]);
     }
 }
