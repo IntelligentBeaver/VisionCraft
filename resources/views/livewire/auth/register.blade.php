@@ -7,6 +7,7 @@
     @endif
 
     <form class="space-y-4" wire:submit.prevent="register">
+        @csrf
         <div>
             <label class="label">
                 <span class="label-text">Name</span>
@@ -76,6 +77,16 @@
                 @enderror
             </div>
         </div>
+        <div class="py-4">
+            <label class="form-control w-full max-w-xs">
+                <div class="label">
+                    <span class="label-text text-base font-semibold">Upload an Image:</span>
+                    <span class="label-text-alt">Avatar</span>
+                </div>
+                <input class="file-input file-input-bordered file-input-primary w-full max-w-xs" id="image"
+                    name="image" type="file" wire:model.blur="image" />
+            </label>
+        </div>
 
         <div>
             <label class="label">
@@ -93,4 +104,7 @@
 
         <button class="btn btn-primary w-full" type="submit">Register</button>
     </form>
+    <div class="py-4">
+        <p>Already have an account? <a class="link-secondary" href="{{ route('login') }}">Login</a></p>
+    </div>
 </div>

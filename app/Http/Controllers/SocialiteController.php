@@ -90,7 +90,7 @@ class SocialiteController extends Controller
                 return redirect()->route('dashboard');
             }
 
-            // If there is a user with that LinkedIn ID, then juse Log him in
+            // If there is a user with that LinkedIn ID, then just Log him in
             if ($user) {
                 // User is already registered, log them in
                 Auth::login($user);

@@ -19,8 +19,9 @@
     </section>
 
     <!-- Survey Section -->
-    <section class="bg-white px-8 py-16">
-        <h2 class="mb-6 text-center text-3xl font-bold text-yellow-600">Take our survey</h2>
+    @livewire('question-card')
+    {{-- <section class="px-8 py-16 bg-white">
+        <h2 class="mb-6 text-3xl font-bold text-center text-yellow-600">Take our survey</h2>
         <div class="mx-auto max-w-4xl rounded-md bg-[#FCEAC7] p-6">
             <div class="mb-4 text-sm font-medium text-gray-700">
                 Messaging Banner: Pick any of the options to find out your job!
@@ -29,22 +30,22 @@
                 <div class="flex items-center justify-between">
                     <p class="font-medium">1. Question text goes here.</p>
                     <div class="flex space-x-2">
-                        <button class="rounded-md bg-gray-200 px-3 py-1">1</button>
-                        <button class="rounded-md bg-gray-200 px-3 py-1">2</button>
-                        <button class="rounded-md bg-gray-200 px-3 py-1">3</button>
-                        <button class="rounded-md bg-gray-200 px-3 py-1">4</button>
-                        <button class="rounded-md bg-gray-200 px-3 py-1">5</button>
+                        <button class="px-3 py-1 bg-gray-200 rounded-md">1</button>
+                        <button class="px-3 py-1 bg-gray-200 rounded-md">2</button>
+                        <button class="px-3 py-1 bg-gray-200 rounded-md">3</button>
+                        <button class="px-3 py-1 bg-gray-200 rounded-md">4</button>
+                        <button class="px-3 py-1 bg-gray-200 rounded-md">5</button>
                     </div>
                 </div>
                 <!-- Add more questions as needed -->
             </div>
             <div class="mt-4 text-right">
-                <button class="rounded-md bg-yellow-600 px-6 py-3 font-medium text-white hover:bg-yellow-500">
+                <button class="px-6 py-3 font-medium text-white bg-yellow-600 rounded-md hover:bg-yellow-500">
                     Next
                 </button>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Features Section -->
     <section class="bg-[#FFF8E7] px-8 py-16">

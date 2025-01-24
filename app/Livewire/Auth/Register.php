@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use Livewire\WithFileUploads;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Livewire\Attributes\Validate;
 
 class Register extends Component
 {
+    use WithFileUploads;
     #[Validate('required|string|max:255')]
     public $name = '';
     #[Validate('required|email|unique:users,email')]
@@ -22,6 +24,9 @@ class Register extends Component
     #[Validate('nullable|integer|min:1')]
     public $age;
 
+    #[Validate('nullable|image|max:8192|mimes:png,jpg,jpeg,webp')]
+    public $image;
+
     #[Validate('nullable|string|max:255')]
     public $location = '';
 
@@ -30,32 +35,76 @@ class Register extends Component
 
     #[Validate('nullable|string|max:255')]
     public $education;
-#[Validate('nullable|string|max:255')]
+    #[Validate('nullable|string|max:255')]
     public $experience;
     #[Validate('nullable|in:male,female')]
-    public $gender; 
+    public $gender;
     #[Validate('nullable|string|max:255')]
     public $interest;
 
     public function register()
     {
         $this->validate();
+        
+        if ($this->has('image')) {
+            $file = $this->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $type = $file->getMimeType();
+            $filename = time() . '.' . $extension;
+            $path = 'images/avatar/';
+            $file->move(public_path($path), $filename);
 
-        User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'age' => $this->age,
-            'location' => $this->location,
-            'skills' => $this->skills,
-            'education' => $this->education,
-            'experience' => $this->experience,
-            'gender' => $this->gender,
-            'interest' => $this->interest,
-        ]);
+            $user = User::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => Hash::make($this->password),
+                'image' => $path . $filename,
+                'age' => $this->age,
+                'location' => $this->location,
+                'skills' => $this->skills,
+                'education' => $this->education,
+                'experience' => $this->experience,
+                'gender' => $this->gender,
+                'interest' => $this->interest,
+            ]);
+        } else {
+            $path = 'images/avatar/';
+            $user = User::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => Hash::make($this->password),
+                'image' => $path . 'placeholder.jpg',
+                'age' => $this->age,
+                'location' => $this->location,
+                'skills' => $this->skills,
+                'education' => $this->education,
+                'experience' => $this->experience,
+                'gender' => $this->gender,
+                'interest' => $this->interest,
+            ]);
+        }
 
-        session()->flash('success', 'Registration successful.');
-        return redirect()->route('login');
+        // $user = User::create([
+        //     'name' => $this->name,
+        //     'email' => $this->email,
+        //     'password' => Hash::make($this->password),
+        //     'age' => $this->age,
+        //     'location' => $this->location,
+        //     'skills' => $this->skills,
+        //     'education' => $this->education,
+        //     'experience' => $this->experience,
+        //     'gender' => $this->gender,
+        //     'interest' => $this->interest,
+        // ]);
+
+        if ($user) {
+            session()->flash('success', 'Registration successful.');
+            return redirect()->route('login');
+        } else {
+            session()->flash('error', 'Registration failed.');
+            $this->reset();
+            return redirect()->route('register');
+        }
     }
 
     public function render()

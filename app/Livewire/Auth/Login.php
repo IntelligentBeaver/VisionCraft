@@ -24,6 +24,7 @@ class Login extends Component
             session()->flash('success', 'Login successful.');
             return redirect()->route('dashboard');
         } else {
+            $this->reset();  
             session()->flash('error', 'Invalid credentials.');
         }
     }

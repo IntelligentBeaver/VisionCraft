@@ -1,10 +1,11 @@
 <div>
     @if (session('error'))
-        <div class="alert-danger alert">{{ session('error') }}</div>
+        <div class="alert alert-error text-error-content">{{ session('error') }}</div>
     @endif
 
 
     <form class="flex flex-col justify-evenly" wire:submit.prevent="login">
+        @csrf
         <div>
             <label class="form-control w-full max-w-md">
                 {{-- Upper Label --}}
@@ -100,4 +101,7 @@
             </div>
         </div>
     </form>
+    <div class="py-2">
+        <p>Don't have an account? <a class="link-secondary" href="{{ route('register') }}">Register</a></p>
+    </div>
 </div>

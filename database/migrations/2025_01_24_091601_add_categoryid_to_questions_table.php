@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('questions', function (Blueprint $table) {
-            $table->id('id');
-            $table->timestamps();
-            $table->string('question_text');
-            $table->string('question_type');
+        Schema::table('questions', function (Blueprint $table) {
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -25,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('questions', function (Blueprint $table) {
-            // Drop the foreign key first
+            // Drop the foreign key constraint
             $table->dropForeign(['category_id']);
             // Then drop the column
             $table->dropColumn('category_id');
