@@ -13,9 +13,9 @@ class IndustriesSeeder extends Seeder
     public function run(): void
     {
         // Retrieve category IDs for the respective categories
-        $industryAreaId = DB::table('categories')->where('name', 'industry area')->value('id');
-        $domainKnowledgeId = DB::table('categories')->where('name', 'domain knowledge')->value('id');
-        $industryId = DB::table('categories')->where('name', 'industry')->value('id');
+        $industryAreaId = DB::table('categories')->where('category_name', 'industry area')->value('id');
+        $domainKnowledgeId = DB::table('categories')->where('category_name', 'domain knowledge')->value('id');
+        $industryId = DB::table('categories')->where('category_name', 'industry')->value('id');
 
         // Industries for 'Industry Area'
         $industryAreaIndustries = [
@@ -176,7 +176,7 @@ class IndustriesSeeder extends Seeder
         ];
 
         // Insert data into the industries table
-        $industries = [
+        $generalIndustries = [
             'Accounting',
             'Advertising',
             'Aerospace',
@@ -250,29 +250,37 @@ class IndustriesSeeder extends Seeder
             'Wellness'
         ];
 
+        // Insert 'Industry Area' industries
+        $industryAreaData = [];
         foreach ($industryAreaIndustries as $name) {
-            $industries[] = [
-                'name' => $name,
-                'description' => '',
+            $industryAreaData[] = [
                 'category_id' => $industryAreaId,
+                'industry_name' => $name,
+                'industry_description' => '',
             ];
         }
+        DB::table('industries')->insert($industryAreaData);
 
+ // Insert 'Domain Knowledge' industries
+        $domainKnowledgeData = [];
         foreach ($domainKnowledgeIndustries as $name) {
-            $industries[] = [
-                'name' => $name,
-                'description' => '',
+            $domainKnowledgeData[] = [
                 'category_id' => $domainKnowledgeId,
+                'industry_name' => $name,
+                'industry_description' => '',
             ];
         }
-        foreach ($industries as $name) {
-            $industries[] = [
-                'name' => $name,
-                'description' => '',
-                'category_id' => $industryId,
-            ];
-        }
+        DB::table('industries')->insert($domainKnowledgeData);
 
-        DB::table('industries')->insert($industries);
+        // Insert general industries
+        $generalIndustriesData = [];
+        foreach ($generalIndustries as $name) {
+            $generalIndustriesData[] = [
+                'category_id' => $industryId,
+                'industry_name' => $name,
+                'industry_description' => '',
+            ];
+        }
+        DB::table('industries')->insert($generalIndustriesData);
     }
 }

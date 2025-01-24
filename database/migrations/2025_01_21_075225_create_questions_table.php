@@ -25,10 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('questions', function (Blueprint $table) {
-            // Drop the foreign key first
-            $table->dropForeign(['category_id']);
-            // Then drop the column
-            $table->dropColumn('category_id');
+            $table->dropIfExists('questions');
         });
     }
 };
