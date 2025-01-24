@@ -20,11 +20,17 @@ Route::controller(SocialiteController::class)->group((function () {
     Route::get('auth/linkedin-callback', 'linkedInAuthenticationCallback')->name('auth.linkedin-callback');
 }));
 
-Route::get('/login', function () {
+
+// TODO: Adde Functionality of Account Merge
+//  Route::get('auth/merge-accounts',function(){
+//     return view('auth.merge-accounts');
+//  })->name('auth.merge-accounts');
+
+Route::middleware('guest')->get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-Route::get('/register', function () {
+Route::middleware('guest')->get('/register', function () {
     return view('auth.register');
 })->name('register');
 
