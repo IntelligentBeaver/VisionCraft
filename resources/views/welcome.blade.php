@@ -5,12 +5,12 @@
 @section('content')
 
     <section
-        class="hero-container mx-auto flex min-h-fit max-w-8xl flex-col items-center justify-between gap-10 px-10 py-12 lg:min-h-screen lg:flex-row">
+        class="flex flex-col items-center justify-between gap-8 px-10 py-12 mx-auto min-h-fit max-w-8xl lg:min-h-screen lg:flex-row">
 
-        <div class="hero-text flex flex-col gap-6">
+        <div class="flex flex-col gap-6 hero-text">
             <div class="font-extrabold">
                 <h1 class="leading-tight">We help you find</h1>
-                <h1 class="leading-tight text-accent">
+                <h1 class="leading-tight text-primary">
                     the best solution
                 </h1>
             </div>
@@ -24,34 +24,31 @@
                 </p>
             </div>
             <div class="mt-6">
-                <a class="hover:bg-blackMain duration-400 transform rounded-full bg-accent px-5 py-4 font-medium text-white hover:text-accent"
-                    href="#">
-                    Learn More
+                <a class="px-5 py-4 font-medium rounded-full btn btn-primary" href="#survey">
+                    Take a survey
                 </a>
             </div>
         </div>
         <div class="flex items-center justify-center">
-            <img class="h-[500px] min-w-[400px] rounded-md shadow-xl" src={"/hult_image/people.jpg"} alt="people"
-                width=400 height=200 />
+            <img class="min-w-[400px] rounded-md shadow-xl" src="{{ asset('images/desktop.png') }}" alt="people"
+                height=200 />
         </div>
     </section>
     <!-- Hero Section -->
-    <section class="bg-[#FFF8E7] px-8 py-16 text-center">
-        <div class="mx-auto max-w-4xl">
+    {{-- <section class="bg-[#FFF8E7] px-8 py-16 text-center">
+        <div class="max-w-4xl mx-auto">
             <h1 class="mb-4 text-4xl font-bold text-yellow-600">We help you find the best solution</h1>
             <p class="mb-8 text-gray-700">Et has minim elitr intellegat. Mea aeterno eleifend antiopam ad, nam no suscipit
                 quaerendum.</p>
-            <button class="rounded-md bg-yellow-600 px-6 py-3 font-medium text-white hover:bg-yellow-500">
+            <button class="px-6 py-3 font-medium text-white bg-yellow-600 rounded-md hover:bg-yellow-500">
                 Start Survey
             </button>
         </div>
-        {{-- <div class="mt-8">
+        <div class="mt-8">
             <img class="w-full max-w-md mx-auto" src="/path/to/hero-image.png" alt="Illustration">
-        </div> --}}
-    </section>
+        </div>
+    </section> --}}
 
-    <!-- Survey Section -->
-    @livewire('question-card')
     {{-- <section class="px-8 py-16 bg-white">
         <h2 class="mb-6 text-3xl font-bold text-center text-yellow-600">Take our survey</h2>
         <div class="mx-auto max-w-4xl rounded-md bg-[#FCEAC7] p-6">
@@ -80,25 +77,30 @@
     </section> --}}
 
     <!-- Features Section -->
-    <section class="bg-[#FFF8E7] px-8 py-16">
-        <h2 class="mb-6 text-center text-3xl font-bold text-gray-800">We offer a complete range of features</h2>
-        <div class="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
+    <section class="bg-[#FFF8E7] px-8 py-24">
+        <h2 class="font-bold text-center text-gray-800 mb-14">We offer a complete range of features</h2>
+        <div class="grid max-w-6xl grid-cols-1 gap-12 mx-auto md:grid-cols-3">
             <div class="text-center">
-                {{-- <img class="mx-auto mb-4" src="/path/to/job-match-icon.png" alt="Job Match"> --}}
-                <h3 class="text-lg font-bold">Job Match</h3>
-                <p class="text-sm text-gray-600">Has natum gubernare. Nam et volutpat vehicula.</p>
+                <img class="mx-auto mb-4" src="{{ asset('images/magnifier.png') }}" alt="Job Match">
+                <h5 class="mb-2 font-bold">Job Match</h5>
+                <p class="text-gray-600">Has natum gubernare. Nam et volutpat vehicula.</p>
             </div>
             <div class="text-center">
-                {{-- <img class="mx-auto mb-4" src="/path/to/resume-optimization-icon.png" alt="Resume Optimization"> --}}
-                <h3 class="text-lg font-bold">Resume Optimization</h3>
-                <p class="text-sm text-gray-600">Vic ad sensit soluta nec error reformidans.</p>
+                <img class="mx-auto mb-4" src="{{ asset('images/multiple files.png') }}" alt="Resume Optimization">
+                <h5 class="mb-2 font-bold">Resume Optimization</h5>
+                <p class="text-gray-600">Vic ad sensit soluta nec error reformidans.</p>
             </div>
             <div class="text-center">
-                {{-- <img class="mx-auto mb-4" src="/path/to/invoice-generator-icon.png" alt="Invoice Generator"> --}}
-                <h3 class="text-lg font-bold">Invoice Generator</h3>
-                <p class="text-sm text-gray-600">Pro ex integrite perit nec cum at leos autem.</p>
+                <img class="mx-auto mb-4" src="{{ asset('images/nav.png') }}" alt="Invoice Generator">
+                <h5 class="mb-2 font-bold">Invoice Generator</h5>
+                <p class="text-gray-600">Pro ex integrite perit nec cum at leos autem.</p>
             </div>
         </div>
+    </section>
+    <!-- Survey Section -->
+    <section class="px-8 py-16 text-center">
+        <h2 class="mb-6 font-bold text-primary">Take Our Survey</h2>
+        @livewire('question-card')
     </section>
 
 @endsection

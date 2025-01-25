@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
 
 Route::view('/', 'welcome');
 
@@ -40,6 +41,9 @@ Route::post('/logout', function () {
 })->name(name: 'logout');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile/settings', [ProfileController::class, 'show'])->name('profile.settings');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/delete', [ProfileController::class, 'delete'])->name('profile.delete');
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');

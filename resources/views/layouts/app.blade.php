@@ -77,7 +77,7 @@
                     @endauth
                 </ul>
             </div>
-            <div class="navbar-end">
+            <div class="space-x-2 navbar-end">
                 @auth
                     <div class="dropdown dropdown-end">
                         <div class="avatar btn btn-circle btn-ghost" role="button" tabindex="0">
@@ -89,17 +89,20 @@
                         <ul class="menu dropdown-content menu-md z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
                             tabindex="0">
                             <li>
-                                <a class="justify-between">
+                                <a class="justify-between" href="{{ route('profile.settings') }}" wire:navigate>
                                     Profile
                                 </a>
                             </li>
-                            <li><a>Settings</a></li>
-                            <li><a>Logout</a></li>
+
+                            {{-- <li><a>Settings</a></li> --}}
+                            <li>
+                                <a class="text-error" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                            </li>
                         </ul>
                     </div>
-                    <form style="display:inline;" method="POST" action="{{ route('logout') }}">
+                    <form id="logout-form" style="display: none;" method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button class="btn btn-error text-error-content" type="submit">Logout</button>
                     </form>
                 @else
                 @endauth
