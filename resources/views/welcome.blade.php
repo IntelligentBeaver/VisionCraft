@@ -3,6 +3,38 @@
 @section('title', 'Welcome')
 
 @section('content')
+
+    <section
+        class="hero-container mx-auto flex min-h-fit max-w-8xl flex-col items-center justify-between gap-10 px-10 py-12 lg:min-h-screen lg:flex-row">
+
+        <div class="hero-text flex flex-col gap-6">
+            <div class="font-extrabold">
+                <h1 class="leading-tight">We help you find</h1>
+                <h1 class="leading-tight text-accent">
+                    the best solution
+                </h1>
+            </div>
+            <div class="">
+                <p class="text-secondaryContent">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui deserunt quis consequuntur facilis soluta
+                    ducimus molestias provident. Laborum perspiciatis optio exercitationem magni harum voluptas in
+                    consectetur quos minima, enim dolorum.Officia reiciendis debitis numquam labore eos ipsam dolore
+                    molestiae quibusdam! Corporis ipsa voluptates impedit fugit tenetur quod id rem sapiente, deserunt fuga
+                    molestiae voluptatem accusamus. Corporis ratione aliquid quidem animi.
+                </p>
+            </div>
+            <div class="mt-6">
+                <a class="hover:bg-blackMain duration-400 transform rounded-full bg-accent px-5 py-4 font-medium text-white hover:text-accent"
+                    href="#">
+                    Learn More
+                </a>
+            </div>
+        </div>
+        <div class="flex items-center justify-center">
+            <img class="h-[500px] min-w-[400px] rounded-md shadow-xl" src={"/hult_image/people.jpg"} alt="people"
+                width=400 height=200 />
+        </div>
+    </section>
     <!-- Hero Section -->
     <section class="bg-[#FFF8E7] px-8 py-16 text-center">
         <div class="mx-auto max-w-4xl">

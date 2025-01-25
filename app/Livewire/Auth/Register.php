@@ -45,57 +45,64 @@ class Register extends Component
     public function register()
     {
         $this->validate();
-        
-        if ($this->has('image')) {
-            $file = $this->file('image');
-            $extension = $file->getClientOriginalExtension();
-            $type = $file->getMimeType();
-            $filename = time() . '.' . $extension;
-            $path = 'images/avatar/';
-            $file->move(public_path($path), $filename);
+        $imagePath = null;
 
-            $user = User::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => Hash::make($this->password),
-                'image' => $path . $filename,
-                'age' => $this->age,
-                'location' => $this->location,
-                'skills' => $this->skills,
-                'education' => $this->education,
-                'experience' => $this->experience,
-                'gender' => $this->gender,
-                'interest' => $this->interest,
-            ]);
-        } else {
-            $path = 'images/avatar/';
-            $user = User::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => Hash::make($this->password),
-                'image' => $path . 'placeholder.jpg',
-                'age' => $this->age,
-                'location' => $this->location,
-                'skills' => $this->skills,
-                'education' => $this->education,
-                'experience' => $this->experience,
-                'gender' => $this->gender,
-                'interest' => $this->interest,
-            ]);
-        }
+        // if ($this->has('image')) {
+        //     $file = $this->file('image');
+        //     $extension = $file->getClientOriginalExtension();
+        //     $type = $file->getMimeType();
+        //     $filename = time() . '.' . $extension;
+        //     $path = 'images/avatar/';
+        //     $file->move(public_path($path), $filename);
 
-        // $user = User::create([
-        //     'name' => $this->name,
-        //     'email' => $this->email,
-        //     'password' => Hash::make($this->password),
-        //     'age' => $this->age,
-        //     'location' => $this->location,
-        //     'skills' => $this->skills,
-        //     'education' => $this->education,
-        //     'experience' => $this->experience,
-        //     'gender' => $this->gender,
-        //     'interest' => $this->interest,
-        // ]);
+        //     $user = User::create([
+        //         'name' => $this->name,
+        //         'email' => $this->email,
+        //         'password' => Hash::make($this->password),
+        //         'image' => $path . $filename,
+        //         'age' => $this->age,
+        //         'location' => $this->location,
+        //         'skills' => $this->skills,
+        //         'education' => $this->education,
+        //         'experience' => $this->experience,
+        //         'gender' => $this->gender,
+        //         'interest' => $this->interest,
+        //     ]);
+        // } else {
+        //     $path = 'images/avatar/';
+        //     $user = User::create([
+        //         'name' => $this->name,
+        //         'email' => $this->email,
+        //         'password' => Hash::make($this->password),
+        //         'image' => $path . 'placeholder.jpg',
+        //         'age' => $this->age,
+        //         'location' => $this->location,
+        //         'skills' => $this->skills,
+        //         'education' => $this->education,
+        //         'experience' => $this->experience,
+        //         'gender' => $this->gender,
+        //         'interest' => $this->interest,
+        //     ]);
+        // }
+
+
+        // Store the uploaded image in the 'public/uploads' directory
+        $imagePath = $this->image 
+        ? $this->image->store('images/avatars', 'public') // Store the uploaded image
+        : 'images/avatar/placeholder.jpg'; // Use the placeholder image if no image is uploaded
+
+        $user = User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+            'image' => $imagePath,
+            'location' => $this->location,
+            'skills' => $this->skills,
+            'education' => $this->education,
+            'experience' => $this->experience,
+            'gender' => $this->gender,
+            'interest' => $this->interest,
+        ]);
 
         if ($user) {
             session()->flash('success', 'Registration successful.');

@@ -1,6 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+
+  /* Responsive Headings: */
+  h1 {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h3 {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h4 {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  h5 {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
+  }
+
+  h6 {
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl;
+  }
+  p {
+    @apply text-base md:text-lg;
+  }
+}
 html,
 body {
   margin: 0;
@@ -11,6 +41,7 @@ body {
   box-sizing: border-box;
   overflow-x: hidden; /* Prevent horizontal scrollbars */
 }
+
 
 
 
