@@ -11,7 +11,8 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $fillable = ['name',
+    protected $fillable = [
+        'name',
         'email',
         'password',
         'google_id',
@@ -23,15 +24,20 @@ class User extends Authenticatable
         'education',
         'experience',
         'gender',
-        'interest',];
+        'interest',
+        'role'
+    ];
     protected $hidden = ['password', 'remember_token'];
-    public function recommendations() {
+    public function recommendations()
+    {
         return $this->hasMany(Recommendation::class);
     }
-    public function skills() {
-    return $this->hasMany(Skill::class);
-}
-public function resume() {
-    return $this->hasOne(Resume::class);
-}
+    public function skills()
+    {
+        return $this->hasMany(Skill::class);
+    }
+    public function resume()
+    {
+        return $this->hasOne(Resume::class);
+    }
 }

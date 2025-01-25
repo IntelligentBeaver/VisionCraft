@@ -21,11 +21,11 @@
     </head>
 
     <body class="font-sans antialiased">
-        <div class="mx-auto shadow-sm navbar bg-base-100">
+        <div class="navbar mx-auto bg-base-100 shadow-sm">
             <div class="navbar-start">
                 <div class="dropdown">
                     <div class="btn btn-ghost lg:hidden" role="button" tabindex="0">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h8m-8 6h16" />
@@ -37,7 +37,13 @@
                             <li>
                                 <a href="/" wire:navigate>Home</a>
                             </li>
-                            <li><a class="px-4" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
+                            @if (Auth::check() && Auth::user()->role === 'admin')
+                                <li><a class="px-4" href="{{ route('admin.dashboard') }}" wire:navigate>Admin
+                                        Dashboard</a></li>
+                            @elseif (Auth::check() && Auth::user()->role === 'user')
+                                <li><a class="px-4" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
+                            @endif
+
 
                             </li>
                             <li>
@@ -59,8 +65,8 @@
                     <img src="{{ asset('images/logo.png') }}" alt="Logo" width="50" height="30">
                 </a>
             </div>
-            <div class="hidden navbar-center lg:flex">
-                <ul class="px-1 menu menu-horizontal">
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1">
                     @auth
                         <li>
                             <a class="px-4" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
@@ -77,13 +83,12 @@
                     @endauth
                 </ul>
             </div>
-            <div class="space-x-2 navbar-end">
+            <div class="navbar-end space-x-2">
                 @auth
                     <div class="dropdown dropdown-end">
                         <div class="avatar btn btn-circle btn-ghost" role="button" tabindex="0">
                             <div class="w-10 rounded-full">
-                                <img src="{{ asset('storage/' . auth()->user()->image) }}"
-                                    alt="Tailwind CSS Navbar component" />
+                                <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="Profile Picture" />
                             </div>
                         </div>
                         <ul class="menu dropdown-content menu-md z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
@@ -92,6 +97,7 @@
                                 <a class="justify-between" href="{{ route('profile.settings') }}" wire:navigate>
                                     Profile
                                 </a>
+
                             </li>
 
                             {{-- <li><a>Settings</a></li> --}}
@@ -112,7 +118,7 @@
             @yield('content')
         </main>
         <!-- Footer -->
-        <footer class="px-8 py-6 text-white bg-gray-900">
+        <footer class="bg-gray-900 px-8 py-6 text-white">
             <div class="text-center">
                 <p class="text-sm">©VisionCraft. All rights reserved.</p>
             </div>

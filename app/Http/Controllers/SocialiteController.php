@@ -52,6 +52,7 @@ class SocialiteController extends Controller
                 'password' => Hash::make('Password@1234'),
                 'google_id' => $googleUser->id,
                 'image' => $imageUrl, // Store the placeholder image URL
+                'role'=>'user'
             ]);
 
             if ($userData) {

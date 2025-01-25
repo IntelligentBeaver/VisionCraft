@@ -46,46 +46,6 @@ class Register extends Component
     {
         $this->validate();
         $imagePath = null;
-
-        // if ($this->has('image')) {
-        //     $file = $this->file('image');
-        //     $extension = $file->getClientOriginalExtension();
-        //     $type = $file->getMimeType();
-        //     $filename = time() . '.' . $extension;
-        //     $path = 'images/avatar/';
-        //     $file->move(public_path($path), $filename);
-
-        //     $user = User::create([
-        //         'name' => $this->name,
-        //         'email' => $this->email,
-        //         'password' => Hash::make($this->password),
-        //         'image' => $path . $filename,
-        //         'age' => $this->age,
-        //         'location' => $this->location,
-        //         'skills' => $this->skills,
-        //         'education' => $this->education,
-        //         'experience' => $this->experience,
-        //         'gender' => $this->gender,
-        //         'interest' => $this->interest,
-        //     ]);
-        // } else {
-        //     $path = 'images/avatar/';
-        //     $user = User::create([
-        //         'name' => $this->name,
-        //         'email' => $this->email,
-        //         'password' => Hash::make($this->password),
-        //         'image' => $path . 'placeholder.jpg',
-        //         'age' => $this->age,
-        //         'location' => $this->location,
-        //         'skills' => $this->skills,
-        //         'education' => $this->education,
-        //         'experience' => $this->experience,
-        //         'gender' => $this->gender,
-        //         'interest' => $this->interest,
-        //     ]);
-        // }
-
-
         // Store the uploaded image in the 'public/uploads' directory
         $imagePath = $this->image 
         ? $this->image->store('images/avatars', 'public') // Store the uploaded image
@@ -102,6 +62,7 @@ class Register extends Component
             'experience' => $this->experience,
             'gender' => $this->gender,
             'interest' => $this->interest,
+            'role'=>'user',
         ]);
 
         if ($user) {

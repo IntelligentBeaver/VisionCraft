@@ -10,9 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    { Schema::table('users', function (Blueprint $table) {
-        $table->string('image')->nullable()->after('email')->default('images/avatar/placeholder.jpg'); // Add the 'image' column
-    });
+    {
+        Schema::table('users', function (Blueprint $table) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('role')->after('password')->default('user'); // 'user' or 'admin'
+            });
+        });
     }
 
     /**
@@ -20,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::table('users', function (Blueprint $table) {
-        $table->dropColumn('image');
-    });
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

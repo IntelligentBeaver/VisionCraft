@@ -20,46 +20,51 @@ class ProfileController extends Controller
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
-        'image' => 'nullable|image|max:1024', // max size 1MB
-        'age' => 'nullable|integer|min:18|max:100',
-        'location' => 'nullable|string|max:255',
-        'skills' => 'nullable|string|max:255',
-        'education' => 'nullable|string|max:255',
-        'experience' => 'nullable|string|max:255',
-        'gender' => 'nullable|string|in:male,female,other',
-        'interest' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:1024', // max size 1MB
+            'age' => 'nullable|integer|min:18|max:100',
+            'location' => 'nullable|string|max:255',
+            'skills' => 'nullable|string|max:255',
+            'education' => 'nullable|string|max:255',
+            'experience' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|in:male,female,other',
+            'interest' => 'nullable|string|max:255',
         ]);
 
         // Get the authenticated user
         $user = Auth::user();
 
         // Update the name
-    $user->name = $request->name;
+        $user->name = $request->name;
 
-    // Update additional fields
-    $user->age = $request->age;
-    $user->location = $request->location;
-    $user->skills = $request->skills;
-    $user->education = $request->education;
-    $user->experience = $request->experience;
-    $user->gender = $request->gender;
-    $user->interest = $request->interest;
+        // Update additional fields
+        $user->age = $request->age;
+        $user->location = $request->location;
+        $user->skills = $request->skills;
+        $user->education = $request->education;
+        $user->experience = $request->experience;
+        $user->gender = $request->gender;
+        $user->interest = $request->interest;
 
         // Check if a new image is uploaded
         if ($request->hasFile('image')) {
-            // Delete the old image if exists
+            // Validate the uploaded file
+            $request->validate([
+                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Allow only valid image files
+            ]);
+
+            // Delete the old image if it exists
             if ($user->image && Storage::exists('public/' . $user->image)) {
                 Storage::delete('public/' . $user->image);
             }
 
             // Store the new image
             $image = $request->file('image');
-            $imagePath = $image->storeAs('public', $image->getClientOriginalName());
-            $user->image = $image->getClientOriginalName(); // Store the new image name
+            $imagePath = $image->store('images', 'public'); // Store in "storage/app/public/images"
+            $user->image = $imagePath; // Save the relative path (e.g., "images/example.jpg")
         }
 
-        // Save the updated user information
-        $user->save();  // This should work if $user is an Eloquent model
+        // Save the updated user
+        $user->save(); // This should work if $user is an Eloquent model
 
         // Redirect back to the profile settings page with a success message
         return redirect()->route('profile.settings')->with('success', 'Profile updated successfully.');
