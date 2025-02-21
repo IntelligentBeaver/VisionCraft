@@ -3,6 +3,11 @@
 @section('title', 'Profile Settings')
 
 @section('content')
+    @if (session('success'))
+        <div class="mx-auto text-center alert alert-success max-w-7xl">
+            <p class="text-center">{{ session('success') }}</p>
+        </div>
+    @endif
 
     <!-- Full Page Background & Centering -->
     <div class="flex justify-center">
@@ -17,7 +22,8 @@
                         src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
                         alt="Profile Image">
                     <!-- Default image if no profile image is set -->
-                    <input class="w-full mt-1 file-input file-input-bordered" name="image" type="file" accept="image/*">
+                    <input class="w-full mt-1 file-input file-input-bordered" name="image" type="file"
+                        accept="image/*">
                 </div>
             </div>
 

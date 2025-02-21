@@ -10,6 +10,8 @@ use App\Http\Controllers\AdminController;
 
 Route::view('/', 'welcome');
 
+
+// Socialite authentication
 Route::controller(SocialiteController::class)->group(function () {
     Route::get('auth/google', 'googleLogin')->name('auth.google');
     Route::get('auth/google-callback', 'googleAuthenticationCallback')->name('auth.google-callback');
@@ -30,12 +32,7 @@ Route::middleware('guest')->group((function () {
     })->name('login');
 }));
 
-
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-})->name(name: 'logout');
-
+// User routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile/settings', [ProfileController::class, 'show'])->name('profile.settings');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -44,6 +41,12 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name(name: 'logout');
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
