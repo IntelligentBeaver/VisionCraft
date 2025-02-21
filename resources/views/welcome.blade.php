@@ -3,16 +3,10 @@
 @section('title', 'Welcome')
 
 @section('content')
-
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
     <section
-        class="flex flex-col items-center justify-between gap-8 px-10 py-12 mx-auto min-h-fit max-w-8xl lg:min-h-screen lg:flex-row">
+        class="mx-auto flex min-h-fit max-w-8xl flex-col items-center justify-between gap-8 px-10 py-12 lg:min-h-screen lg:flex-row">
 
-        <div class="flex flex-col gap-6 hero-text">
+        <div class="hero-text flex flex-col gap-6">
             <div class="font-extrabold">
                 <h1 class="leading-tight">We help you find</h1>
                 <h1 class="leading-tight text-primary">
@@ -29,7 +23,7 @@
                 </p>
             </div>
             <div class="mt-6">
-                <a class="px-5 py-4 font-medium rounded-full btn btn-primary" href="#survey">
+                <a class="btn btn-primary rounded-full px-5 py-4 font-medium" href="#survey">
                     Take a survey
                 </a>
             </div>
@@ -83,8 +77,8 @@
 
     <!-- Features Section -->
     <section class="bg-[#FFF8E7] px-8 py-24">
-        <h2 class="font-bold text-center text-gray-800 mb-14">We offer a complete range of features</h2>
-        <div class="grid max-w-6xl grid-cols-1 gap-12 mx-auto md:grid-cols-3">
+        <h2 class="mb-14 text-center font-bold text-gray-800">We offer a complete range of features</h2>
+        <div class="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
             <div class="text-center">
                 <img class="mx-auto mb-4" src="{{ asset('images/magnifier.png') }}" alt="Job Match">
                 <h5 class="mb-2 font-bold">Job Match</h5>

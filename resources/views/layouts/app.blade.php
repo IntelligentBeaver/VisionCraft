@@ -21,7 +21,7 @@
     </head>
 
     <body class="font-sans antialiased">
-        <div class="mx-auto shadow-sm navbar bg-base-100">
+        {{-- <div class="mx-auto shadow-sm navbar bg-base-100">
             <div class="navbar-start">
                 <div class="dropdown">
                     <div class="btn btn-ghost lg:hidden" role="button" tabindex="0">
@@ -94,13 +94,13 @@
                         <ul class="menu dropdown-content menu-md z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
                             tabindex="0">
                             <li>
-                                {{-- <a class="justify-between" href="{{ route('profile.settings') }}" wire:navigate>
+                                <a class="justify-between" href="{{ route('profile.settings') }}" wire:navigate>
                                     Profile
-                                </a> --}}
+                                </a>
 
                             </li>
 
-                            {{-- <li><a>Settings</a></li> --}}
+                            <li><a>Settings</a></li>
                             <li>
                                 <a class="text-error" href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
@@ -113,12 +113,14 @@
                 @else
                 @endauth
             </div>
-        </div>
+        </div> --}}
+        @livewire('navigation-bar')
+        @livewire('flash-message')
         <main class="mx-auto">
             @yield('content')
         </main>
         <!-- Footer -->
-        <footer class="px-8 py-6 text-white bg-gray-900">
+        <footer class="bg-gray-900 px-8 py-6 text-white">
             <div class="text-center">
                 <p class="text-sm">©VisionCraft. All rights reserved.</p>
             </div>
