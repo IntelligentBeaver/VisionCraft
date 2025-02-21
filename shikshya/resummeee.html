@@ -1,0 +1,48 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Resume Opt.</h2>
+        <div class="upload-box">
+            <p>+</p>
+        </div>
+        <input type="file" id="fileInput">
+        <label for="fileInput">Choose File</label>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Resume Optimizer</h2>
+        
+        <div id="upload-section">
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <!-- + Choose File -->
+            </div>
+            <input type="file" id="fileInput" accept=".pdf">
+        </div>
+        
+        <div id="preview-section">
+            <div>
+                <p>Filename</p>
+                <input type="text" id="filename" readonly>
+            </div>
+            <button onclick="optimizeResume()">Optimize</button>
+        </div>
+    </div>
+</body>
+</html>
+
