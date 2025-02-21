@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Auth\Login;
-use App\Livewire\Auth\Register;
+
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdminController;
+use App\Livewire\Admin\Users;
+use App\Livewire\Dashboard\AdminDashboard;
 
 Route::view('/', 'welcome');
 
@@ -48,6 +49,7 @@ Route::post('/logout', function () {
 })->name(name: 'logout');
 
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
+    Route::view('/admin/manage','dashboard.manage-users')->name('dashboard.manage');
 });

@@ -51,8 +51,17 @@
                 </div>
                 <ul class="menu dropdown-content menu-md z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
                     tabindex="0">
+                    @if (Auth::user()->role == 'admin')
+                        <li>
+                            <a class="w-full" href="{{ route('dashboard.create') }}" wire:navigate>Create User</a>
+                        </li>
+                        <li>
+                            <a class="w-full" href="{{ route('dashboard.manage') }}" wire:navigate>Manage
+                                Users</a>
+                        </li>
+                    @endif
                     <li>
-                        <a class="w-full" href="{{ route('profile.settings') }}">Profile</a>
+                        <a class="w-full" href="{{ route('profile.settings') }}" wire:navigate>Profile</a>
                     </li>
 
                     <li>
