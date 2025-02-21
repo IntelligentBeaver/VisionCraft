@@ -45,34 +45,27 @@ class Register extends Component
     public function register()
     {
         $this->validate();
-        $imagePath = null;
-        // Store the uploaded image in the 'public/uploads' directory
-        $imagePath = $this->image 
-        ? $this->image->store('images/avatars', 'public') // Store the uploaded image
-        : 'images/avatar/placeholder.jpg'; // Use the placeholder image if no image is uploaded
 
-        $user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'image' => $imagePath,
-            'location' => $this->location,
-            'skills' => $this->skills,
-            'education' => $this->education,
-            'experience' => $this->experience,
-            'gender' => $this->gender,
-            'interest' => $this->interest,
-            'role'=>'user',
-        ]);
+    $imagePath = $this->image 
+        ? $this->image->store('images/avatars', 'public')
+        : 'images/avatar/placeholder.jpg';
 
-        if ($user) {
-            session()->flash('success', 'Registration successful.');
-            return redirect()->route('login');
-        } else {
-            session()->flash('error', 'Registration failed.');
-            $this->reset();
-            return redirect()->route('register');
-        }
+    User::create([
+        'name' => $this->name,
+        'email' => $this->email,
+        'password' => Hash::make($this->password),
+        'image' => $imagePath,
+        'location' => $this->location,
+        'skills' => $this->skills,
+        'education' => $this->education,
+        'experience' => $this->experience,
+        'gender' => $this->gender,
+        'interest' => $this->interest,
+        'role' => 'user',
+    ]);
+
+    session()->flash('success', 'Registration successful.');
+    return redirect()->route('login');
     }
 
     public function render()

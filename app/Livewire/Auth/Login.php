@@ -18,15 +18,15 @@ class Login extends Component
 
     public function login()
     {
-        $credentials = $this->validate();
+        $this->validate();
 
-        if (Auth::attempt($credentials, $this->remember)) {
-            session()->flash('success', 'Login successful.');
-            return redirect()->route('dashboard');
-        } else {
-            $this->reset();  
-            session()->flash('error', 'Invalid credentials.');
-        }
+    if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        session()->flash('success', 'Login successful.');
+            return redirect('/');
+    } else {
+        session()->flash('error', 'Invalid credentials.');
+        $this->reset(['password']);  // Reset password only
+    }
     }
 
     public function render()

@@ -4,6 +4,11 @@
 
 @section('content')
 
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <section
         class="flex flex-col items-center justify-between gap-8 px-10 py-12 mx-auto min-h-fit max-w-8xl lg:min-h-screen lg:flex-row">
 
