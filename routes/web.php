@@ -20,11 +20,6 @@ Route::controller(SocialiteController::class)->group((function () {
     Route::get('auth/linkedin-callback', 'linkedInAuthenticationCallback')->name('auth.linkedin-callback');
 }));
 
-// TODO: Adde Functionality of Account Merge
-//  Route::get('auth/merge-accounts',function(){
-//     return view('auth.merge-accounts');
-//  })->name('auth.merge-accounts');
-
 
 Route::middleware('guest')->group((function () {
     Route::get('/register', function () {
@@ -52,5 +47,4 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-//    Other admin routes
 });
