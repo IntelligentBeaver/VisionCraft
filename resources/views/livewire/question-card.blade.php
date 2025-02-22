@@ -1,63 +1,73 @@
-<div class="max-w-3xl p-6 mx-auto rounded-lg shadow-xl bg-base-100" id="survey">
+<div class="max-w-3xl p-6 mx-auto bg-white rounded-lg shadow-xl" id="survey">
     @if ($question)
-        <!-- ✅ Progress Bar -->
-        <div class="relative w-full h-3 overflow-hidden rounded-lg bg-primary/20">
-            <div class="absolute top-0 left-0 h-full transition-all duration-300 bg-primary"
+        <!-- Progress Bar -->
+        <div class="relative w-full h-3 overflow-hidden bg-gray-200 rounded-lg">
+            <div class="absolute top-0 left-0 h-full transition-all duration-300 bg-blue-500"
                 style="width: {{ $progress }}%;">
             </div>
         </div>
 
-        <!-- ✅ Question Section -->
+        <!-- Question Section -->
         <div class="mt-6 space-y-4">
-            <h2 class="text-lg font-semibold text-primary-content">Question {{ $currentQuestionIndex + 1 }}</h2>
-            <p class="text-base-content">
-                {{ is_string($question->question_text) ? $question->question_text : 'Invalid question' }}</p>
+            <h2 class="text-lg font-semibold text-gray-800">Question {{ $currentQuestionIndex + 1 }}</h2>
+            <p class="">{{ is_string($question->question_text) ? $question->question_text : 'Invalid question' }}
+            </p>
 
-            <!-- ✅ Answer Input -->
+
+            <!-- Answer Input -->
             <div>
                 @if ($question->question_type == 'text')
-                    <input class="w-full input input-bordered input-primary" type="text"
-                        value="{{ old('answers.' . $currentQuestionIndex, '') }}" placeholder="Your answer"
+                    <input class="w-full input input-bordered" type="text"
+                        value="{{ old('answers.' . $currentQuestionIndex, '') }}"
                         wire:model.defer="answers.{{ $currentQuestionIndex }}"
-                        wire:key="input-{{ $currentQuestionIndex }}" />
+                        wire:key="input-{{ $currentQuestionIndex }}" placeholder="Your answer" />
                 @elseif ($question->question_type == 'select')
-                    <select class="w-full select select-bordered select-primary"
-                        wire:model.defer="answers.{{ $currentQuestionIndex }}"
+                    <select class="w-full select select-bordered" wire:model.defer="answers.{{ $currentQuestionIndex }}"
                         wire:key="select-{{ $currentQuestionIndex }}">
                         <option value="" disabled selected>Select an option</option>
 
-                        @foreach ($options as $optionArray)
-                            @foreach ($optionArray as $option)
-                                <option value="{{ $option }}">{{ $option }}</option>
-                            @endforeach
+                        @foreach ($options as $index => $optionArray)
+                            @if ($index == $currentQuestionIndex)
+                                <!-- ✅ Show only relevant options -->
+                                @foreach ($optionArray as $option)
+                                    <option value="{{ $option }}">{{ $option }}</option>
+                                @endforeach
+                            @endif
                         @endforeach
                     </select>
+
                 @endif
 
-                <!-- ✅ Error Message -->
+                <!-- Error Message (Animated) -->
                 @error("answers.{$currentQuestionIndex}")
-                    <p class="mt-2 text-sm animate-fadeIn text-error">{{ $message }}</p>
+                    <p class="mt-2 text-sm text-red-500 animate-fadeIn">{{ $message }}</p>
                 @enderror
             </div>
         </div>
 
-        <!-- ✅ Navigation Buttons -->
+        <!-- Navigation Buttons -->
         <div class="flex justify-between mt-6">
-            <button class="btn btn-neutral" wire:click="previousQuestion" @disabled($currentQuestionIndex == 0)>
-                « Previous
+            <button
+                class="px-4 py-2 text-white transition-all duration-200 bg-gray-500 rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                wire:click="previousQuestion" @disabled($currentQuestionIndex == 0)>
+                Previous
             </button>
 
             @if ($currentQuestionIndex < $questions->count() - 1)
-                <button class="btn btn-primary" wire:click="nextQuestion">
-                    Next »
+                <button
+                    class="px-4 py-2 text-white transition-all duration-200 bg-blue-500 rounded-lg hover:bg-blue-700"
+                    wire:click="nextQuestion">
+                    Next
                 </button>
             @else
-                <button class="btn btn-success" wire:click="submit">
-                    Submit ✔
+                <button
+                    class="px-4 py-2 text-white transition-all duration-200 bg-green-500 rounded-lg hover:bg-green-700"
+                    wire:click="submit">
+                    Submit
                 </button>
             @endif
         </div>
     @else
-        <p class="text-center text-base-content">No questions available!</p>
+        <p class="text-center text-gray-600">No questions available!</p>
     @endif
 </div>

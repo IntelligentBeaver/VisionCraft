@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
-use App\Livewire\Admin\Users;
-use App\Livewire\Dashboard\AdminDashboard;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\FlaskController;
+
 
 Route::view('/', 'welcome');
 
@@ -53,6 +56,22 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
     Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
 });
+
+// Route::get('/flask-view', [FlaskController::class, 'showFlaskData']);
+// Route::post('/get-recommendations', function (Request $request) {
+//     $response = Http::post('http://127.0.0.1:5000/recommend', [
+//         'skills' => $request->input('skills'),
+//         'industry' => $request->input('industry'),
+//         'functional_area' => $request->input('functional_area')
+//     ]);
+
+//     return response()->json($response->json());
+// });
+// Route to display form
+Route::get('/flask-form', [FlaskController::class, 'showForm']);
+
+// Route to handle form submission and send data to Flask
+Route::post('/send-to-flask', [FlaskController::class, 'sendToFlask']);
 
 Route::view('/resume/process', 'resume_process');
 Route::view('resume/upload', 'resume_upload');

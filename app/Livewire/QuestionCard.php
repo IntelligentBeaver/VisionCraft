@@ -5,9 +5,6 @@ namespace App\Livewire;
 use App\Models\Questions;
 use App\Models\Industry;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Response; // Import Response model
-
 
 class QuestionCard extends Component
 {
@@ -43,11 +40,12 @@ class QuestionCard extends Component
     {
         foreach ($this->questions as $index => $question) {
             if ($question->question_type === 'select') {
+                // ✅ Fetch industry names for the specific category_id of the question
                 $this->options[$index] = Industry::where('category_id', $question->category_id)
-                    ->pluck('industry_name') // ✅ Retrieves an array of strings
+                    ->pluck('industry_name') // Get only industry names
                     ->toArray();
             } else {
-                $this->options[$index] = []; // ✅ Ensure empty array for non-select questions
+                $this->options[$index] = []; // Keep empty for non-select questions
             }
         }
     }
@@ -73,41 +71,26 @@ class QuestionCard extends Component
 
     public function submit()
     {
-        $this->validate(); // Ensure all questions are answered
+        $this->validate();
 
-        // Ensure user is authenticated
-        $user = Auth::user();
-        if (!$user) {
-            session()->flash('error', 'You must be logged in to submit answers.');
-            return;
+        // 🔹 Convert all answers to strings before submission
+        foreach ($this->answers as $key => $answer) {
+            $this->answers[$key] = strval($answer);
         }
 
-        // Store each response in the database
-        foreach ($this->answers as $index => $answer) {
-            Response::create([
-                'user_id' => $user->id,
-                'question_id' => $this->questions[$index]->id,
-                'survey_id' => $this->questions[$index]->survey_id, // Ensure survey_id is available
-                'answer' => $answer,
-            ]);
-        }
-
-        // Clear answers and reset survey
-        $this->reset(['answers', 'currentQuestionIndex']);
-
-        session()->flash('success', 'Your responses have been saved!');
         // dd($this->answers); // Debugging purpose
     }
 
     public function render()
     {
 
+        // dd(gettype($this->answers[$this->currentQuestionIndex]), $this->answers[$this->currentQuestionIndex]);
         return view('livewire.question-card', [
             'question' => $this->questions[$this->currentQuestionIndex] ?? null,
             'progress' => $this->questions->count() > 0
                 ? (($this->currentQuestionIndex + 1) / $this->questions->count() * 100)
                 : 0,
-            'options' => $this->options[$this->currentQuestionIndex] ?? [], // ✅ Pass the full array
+            'options' => $this->options[$this->currentQuestionIndex] ?? [], // ✅ Send correct options
         ]);
     }
 }
