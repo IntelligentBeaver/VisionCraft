@@ -2,14 +2,17 @@
 
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Auth\Login;
-use App\Livewire\Auth\Register;
+
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdminController;
+use App\Livewire\Admin\Users;
+use App\Livewire\Dashboard\AdminDashboard;
 
 Route::view('/', 'welcome');
 
+
+// Socialite authentication
 Route::controller(SocialiteController::class)->group(function () {
     Route::get('auth/google', 'googleLogin')->name('auth.google');
     Route::get('auth/google-callback', 'googleAuthenticationCallback')->name('auth.google-callback');
@@ -30,12 +33,7 @@ Route::middleware('guest')->group((function () {
     })->name('login');
 }));
 
-
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-})->name(name: 'logout');
-
+// User routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile/settings', [ProfileController::class, 'show'])->name('profile.settings');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -45,6 +43,16 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name(name: 'logout');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
+    Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
 });
+
+Route::view('/resume/process', 'resume_process');
+Route::view('resume/upload', 'resume_upload');

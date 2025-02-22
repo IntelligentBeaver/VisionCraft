@@ -21,108 +21,16 @@
     </head>
 
     <body class="font-sans antialiased">
-        <div class="mx-auto shadow-sm navbar bg-base-100">
-            <div class="navbar-start">
-                <div class="dropdown">
-                    <div class="btn btn-ghost lg:hidden" role="button" tabindex="0">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h8m-8 6h16" />
-                        </svg>
-                    </div>
-                    <ul class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
-                        tabindex="0">
-                        @auth
-                            <li>
-                                <a href="/" wire:navigate>Home</a>
-                            </li>
-                            @if (Auth::check() && Auth::user()->role === 'admin')
-                                <li><a class="px-4" href="{{ route('admin.dashboard') }}" wire:navigate>Admin
-                                        Dashboard</a></li>
-                            @elseif (Auth::check() && Auth::user()->role === 'user')
-                                <li><a class="px-4" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
-                            @endif
-
-
-                            </li>
-                            <li>
-                                <form style="display:inline;" method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button class="" type="submit">Logout</button>
-                                </form>
-                            </li>
-                        @else
-                            <li>
-                                <a href="/" wire:navigate>Home</a>
-                            </li>
-                            <li><a class="px-4" href="{{ route('login') }}" wire:navigate>Login</a></li>
-                            <li><a class="px-4" href="{{ route('register') }}" wire:navigate>Register</a></li>
-                        @endauth
-                    </ul>
-                </div>
-                <a class="font-bold" href="/" wire:navigate>
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" width="50" height="30">
-                </a>
-            </div>
-            <div class="hidden navbar-center lg:flex">
-                <ul class="px-1 menu menu-horizontal">
-                    @auth
-                        <li>
-                            <a class="px-4" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="/" wire:navigate>Home</a>
-                        </li>
-                    @else
-                        <li>
-                            <a href="/" wire:navigate>Home</a>
-                        </li>
-                        <li><a class="px-4" href="{{ route('login') }}" wire:navigate>Login</a></li>
-                        <li><a class="px-4" href="{{ route('register') }}" wire:navigate>Register</a></li>
-                    @endauth
-                </ul>
-            </div>
-            <div class="space-x-2 navbar-end">
-                @auth
-                    <div class="dropdown dropdown-end">
-                        <div class="avatar btn btn-circle btn-ghost" role="button" tabindex="0">
-                            <div class="w-10 rounded-full">
-                                <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="Profile Picture" />
-                            </div>
-                        </div>
-                        <ul class="menu dropdown-content menu-md z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
-                            tabindex="0">
-                            <li>
-                                {{-- <a class="justify-between" href="{{ route('profile.settings') }}" wire:navigate>
-                                    Profile
-                                </a> --}}
-
-                            </li>
-
-                            {{-- <li><a>Settings</a></li> --}}
-                            <li>
-                                <a class="text-error" href="#"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <form id="logout-form" style="display: none;" method="POST" action="{{ route('logout') }}">
-                        @csrf
-                    </form>
-                @else
-                @endauth
-            </div>
-        </div>
+        @livewire('navigation-bar')
+        @livewire('flash-message')
         <main class="mx-auto">
             @yield('content')
         </main>
+        <main class="mx-auto flex-1">
+            @yield('dashboard_section')
+        </main>
         <!-- Footer -->
-        <footer class="px-8 py-6 text-white bg-gray-900">
-            <div class="text-center">
-                <p class="text-sm">©VisionCraft. All rights reserved.</p>
-            </div>
-        </footer>
+        @livewire('footer')
         @livewireScripts
 
 
