@@ -6,23 +6,45 @@ use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
 {
-    public function showUploadPage()
+    
+    public function index()
     {
-        return view('resume_upload');
+        return view('resume');
     }
 
-    public function processResume(Request $request)
+    
+    public function upload(Request $request)
     {
         $request->validate([
-            'resume' => 'required|mimes:pdf|max:2048',
+            'resume' => 'required|mimes:pdf|max:2048', 
         ]);
 
-        // Store the uploaded resume in the storage
-        $resumePath = $request->file('resume')->store('resumes', 'public');
+        
+        $filename = time() . '_' . $request->file('resume')->getClientOriginalName();
+        $request->file('resume')->storeAs('resumes', $filename, 'public');
 
-        // Simulating an optimized resume (Replace with actual optimization logic)
-        $optimizedResumePath = 'storage/resumes/optimized_resume.pdf';
+        return view('resume', compact('filename')); 
+    }
 
-        return view('resume_process', compact('resumePath', 'optimizedResumePath'));
+    
+    public function optimize($filename)
+    {
+        
+        $optimizedFilename = 'optimized_' . $filename;
+        Storage::disk('public')->copy('resumes/' . $filename, 'resumes/' . $optimizedFilename);
+
+        return view('resume', compact('filename', 'optimizedFilename'));
+    }
+
+    
+    public function download($filename)
+    {
+        $filePath = storage_path("app/public/resumes/{$filename}");
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        return response()->download($filePath);
     }
 }
