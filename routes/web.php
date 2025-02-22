@@ -10,7 +10,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\FlaskController;
-
+use App\Http\Controllers\ResController;
 
 Route::view('/', 'welcome');
 
@@ -67,11 +67,16 @@ Route::middleware(['auth'])->group(function () {
 
 //     return response()->json($response->json());
 // });
-// Route to display form
-Route::get('/flask-form', [FlaskController::class, 'showForm']);
+// // Route to display form
+// Route::get('/flask-form', [FlaskController::class, 'showForm']);
 
-// Route to handle form submission and send data to Flask
-Route::post('/send-to-flask', [FlaskController::class, 'sendToFlask']);
+// // Route to handle form submission and send data to Flask
+// Route::post('/send-to-flask', [FlaskController::class, 'sendToFlask']);
+
+Route::post('/upload-resume', [ResController::class, 'uploadResume']);
+Route::get('/download-resume/{filename}', [ResController::class, 'downloadResume']);
+Route::post('/recommend-jobs', [ResController::class, 'recommendJobs']);
+Route::get('/show-form', [ResController::class, 'showForm']);
 
 Route::view('/resume/process', 'resume_process');
 Route::view('resume/upload', 'resume_upload');
