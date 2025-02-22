@@ -51,5 +51,5 @@ Route::post('/logout', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
-    Route::view('/admin/manage','dashboard.manage-users')->name('dashboard.manage');
+    Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
 });
