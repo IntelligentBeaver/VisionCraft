@@ -46,26 +46,26 @@ class Register extends Component
     {
         $this->validate();
 
-    $imagePath = $this->image 
-        ? $this->image->store('images/avatars', 'public')
-        : 'images/avatar/placeholder.jpg';
+        $imagePath = $this->image
+            ? $this->image->store('images/avatars', 'public')
+            : 'images/avatar/placeholder.jpg';
 
-    User::create([
-        'name' => $this->name,
-        'email' => $this->email,
-        'password' => Hash::make($this->password),
-        'image' => $imagePath,
-        'location' => $this->location,
-        'skills' => $this->skills,
-        'education' => $this->education,
-        'experience' => $this->experience,
-        'gender' => $this->gender,
-        'interest' => $this->interest,
-        'role' => 'user',
-    ]);
+        User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+            'image' => $imagePath,
+            'location' => $this->location,
+            'skills' => $this->skills,
+            'education' => $this->education,
+            'experience' => $this->experience,
+            'gender' => $this->gender,
+            'interest' => $this->interest,
+            'role' => 'user',
+        ]);
 
-    session()->flash('success', 'Registration successful.');
-    return redirect()->route('login');
+        session()->flash('success', 'Registration successful.');
+        return redirect()->route('login');
     }
 
     public function render()
