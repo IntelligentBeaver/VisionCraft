@@ -39,8 +39,10 @@
                 <h2>Job Recommendations</h2>
                 <ul>
                     @foreach ($data['response']['recommendations'] as $job)
-                        <li><strong>{{ $job['Job Title'] }}</strong> - {{ $job['Industry'] }}
-                            ({{ $job['Functional Area'] }})</li>
+                        <li>Job Title<strong>{{ $job['Job Title'] }}</strong> <br>
+                            Industry:{{ $job['Industry'] }} <br>
+                            Functional Area:({{ $job['Functional Area'] }})
+                        </li>
                     @endforeach
                 </ul>
             @endif
