@@ -53,3 +53,6 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
     Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
 });
+
+Route::view('/resume/process', 'resume_process');
+Route::view('resume/upload', 'resume_upload');
