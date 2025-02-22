@@ -5,6 +5,11 @@ namespace App\Livewire;
 use App\Models\Questions;
 use App\Models\Industry;
 use Livewire\Component;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Survey;
+use App\Models\Response;
+use App\Models\Recommendation;
 
 class QuestionCard extends Component
 {
@@ -73,13 +78,49 @@ class QuestionCard extends Component
     {
         $this->validate();
 
-        // 🔹 Convert all answers to strings before submission
-        foreach ($this->answers as $key => $answer) {
-            $this->answers[$key] = strval($answer);
+        // Step 1: Create a new survey for the user
+        $survey = Survey::create([
+            'user_id' => Auth::id(),
+            'survey_questions' => count($this->questions),
+        ]);
+
+        // Step 2: Store each response in the responses table
+        foreach ($this->questions as $index => $question) {
+            Response::create([
+                'user_id' => Auth::id(),
+                'survey_id' => $survey->id,
+                'question_id' => $question->id,
+            ]);
         }
 
-        // dd($this->answers); // Debugging purpose
+        // Step 3: Extract skills, industry, and functional area from the first 3 answers
+        $requestData = [
+            'skills' => $this->answers[0] ?? '',
+            'industry' => $this->answers[1] ?? '',
+            'functional_area' => $this->answers[2] ?? '',
+        ];
+
+        // Step 4: Send data to Flask API
+        $response = Http::post('http://127.0.0.1:5000/recommend', $requestData);
+        $recommendations = $response->json()['recommendations'] ?? [];
+
+        // Step 5: Store API response in the recommendations table
+        foreach ($recommendations as $recommendation) {
+            Recommendation::create([
+                'user_id' => Auth::id(),
+                'survey_id' => $survey->id,
+                'job_title' => $recommendation['Job Title'],
+                'industry' => $recommendation['Industry'],
+                'functional_area' => $recommendation['Functional Area'],
+                'role' => $recommendation['Role'],
+                'similarity_score' => $recommendation['Similarity Score'],
+            ]);
+        }
+
+        // Step 6: Redirect or show success message
+        session()->flash('message', 'Survey submitted successfully!');
     }
+
 
     public function render()
     {

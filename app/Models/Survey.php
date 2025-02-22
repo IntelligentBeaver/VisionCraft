@@ -6,19 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Survey extends Model
 {
-    public function user() {
+    protected $fillable = [
+        'user_id',
+    ];
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function career() {
+    public function career()
+    {
         return $this->belongsTo(Career::class);
     }
 
-    public function responses() {
+    public function responses()
+    {
         return $this->hasMany(Response::class);
     }
 
-    public function questions() {
-    return $this->hasMany(Questions::class);
-}
+    public function questions()
+    {
+        return $this->hasMany(Questions::class);
+    }
 }

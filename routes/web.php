@@ -73,10 +73,13 @@ Route::middleware(['auth'])->group(function () {
 // // Route to handle form submission and send data to Flask
 // Route::post('/send-to-flask', [FlaskController::class, 'sendToFlask']);
 
+Route::get('/upload-resume-form', [ResController::class, 'showResumeForm']);
 Route::post('/upload-resume', [ResController::class, 'uploadResume']);
 Route::get('/download-resume/{filename}', [ResController::class, 'downloadResume']);
+
+
+Route::get('/recommend-jobs-form', [ResController::class, 'showRecommendationForm']);
 Route::post('/recommend-jobs', [ResController::class, 'recommendJobs']);
-Route::get('/show-form', [ResController::class, 'showForm']);
 
 Route::view('/resume/process', 'resume_process');
 Route::view('resume/upload', 'resume_upload');

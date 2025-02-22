@@ -9,10 +9,14 @@ use Illuminate\Container\Attributes\Auth;
 
 class ResController extends Controller
 {
-    public function showForm()
+    public function showResumeForm()
     {
-        // Show the form page where users enter data
-        return view('res');
+        return view('resume-upload');
+    }
+
+    public function showRecommendationForm()
+    {
+        return view('job-recommendation');
     }
     public function uploadResume(Request $request)
     {
@@ -60,6 +64,10 @@ class ResController extends Controller
             'functional_area' => $request->input('functional_area'),
         ]);
 
-        return response()->json($response->json());
+        // Convert response to array
+        $recommendations = $response->json()['recommendations'] ?? [];
+
+        // Return the view with the data
+        return view('job-recommendation', compact('recommendations'));
     }
 }
