@@ -17,10 +17,9 @@ class ProfileController extends Controller
     // Update user profile (name and image)
     public function update(Request $request)
     {
-        // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:1024', // max size 1MB
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Ensure it's an image
             'age' => 'nullable|integer|min:18|max:100',
             'location' => 'nullable|string|max:255',
             'skills' => 'nullable|string|max:255',
@@ -30,13 +29,8 @@ class ProfileController extends Controller
             'interest' => 'nullable|string|max:255',
         ]);
 
-        // Get the authenticated user
         $user = Auth::user();
-
-        // Update the name
         $user->name = $request->name;
-
-        // Update additional fields
         $user->age = $request->age;
         $user->location = $request->location;
         $user->skills = $request->skills;
@@ -45,28 +39,20 @@ class ProfileController extends Controller
         $user->gender = $request->gender;
         $user->interest = $request->interest;
 
-        // Check if a new image is uploaded
+        // Process image upload
         if ($request->hasFile('image')) {
-            // Validate the uploaded file
-            $request->validate([
-                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Allow only valid image files
-            ]);
-
-            // Delete the old image if it exists
+            // Delete old image if exists
             if ($user->image && Storage::exists('public/' . $user->image)) {
                 Storage::delete('public/' . $user->image);
             }
 
-            // Store the new image
-            $image = $request->file('image');
-            $imagePath = $image->store('images', 'public'); // Store in "storage/app/public/images"
-            $user->image = $imagePath; // Save the relative path (e.g., "images/example.jpg")
+            // Store new image
+            $imagePath = $request->file('image')->store('images', 'public');
+            $user->image = $imagePath;
         }
 
-        // Save the updated user
-        $user->save(); // This should work if $user is an Eloquent model
+        $user->save();
 
-        // Redirect back to the profile settings page with a success message
         return redirect()->route('profile.settings')->with('success', 'Profile updated successfully.');
     }
 
