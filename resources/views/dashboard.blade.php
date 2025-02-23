@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 @section('title', 'Dashboard')
 
 @section('dashboard_section')
@@ -6,9 +6,8 @@
         <div class="p-6 text-center rounded-lg">
             <h1 class="my-8 font-bold">Dashboard</h1>
 
-            {{-- Show separate content for different user roles --}}
+
             @if (Auth::user()->role == 'admin')
-                {{-- Admin-specific Navigation Links --}}
                 <div class="w-full max-w-6xl mb-4">
                     @livewire('dashboard.user-stats')
                     <div class="flex items-stretch justify-between gap-4 my-4">
@@ -19,25 +18,23 @@
                 </div>
             @endif
 
-            {{-- @if (Auth::user()->role == 'user')
-            
+            @if (Auth::user()->role == 'user')
                 <div class="w-full max-w-6xl mb-4">
                     <div class="flex items-stretch justify-between gap-4 my-4">
                         <a class="flex-1 btn btn-primary" href="{{ route('user-survey-history') }}">
                             Your Survey History
                         </a>
-                        {{-- <a class="flex-1 btn btn-secondary" href="{{ route('dashboard.manage') }}"
-                            wire:navigate>Placeholder</a> --}}
+                        <a class="flex-1 btn btn-secondary" href="{{ route('dashboard.manage') }}"
+                            wire:navigate>Placeholder</a>
+                    </div>
+                    {{-- @livewire('user-recommendations')
         </div>
-        {{-- @livewire('user-recommendations') --}}
-    </div>
-    {{-- @livewire('dashboard.user-dashboard') --}}
-    @endif --}}
+        @livewire('dashboard.user-dashboard')
+    @endif
 
-    {{-- Dynamic Content (For navigation) --}}
-    <div class="mt-6">
-        @yield('dashboard-content')
-    </div>
-    </div>
-    </div>
-@endsection
+        <div class="mt-6">
+            @yield('dashboard-content')
+        </div>
+        </div>
+        </div>
+    @endsection --}}

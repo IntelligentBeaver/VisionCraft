@@ -1,6 +1,6 @@
 <div class="flex justify-center">
-    <div class="w-full px-6 pb-6 rounded-lg max-w-7xl">
-        <h1 class="my-8 font-bold text-center">Manage Users</h1>
+    <div class="w-full max-w-6xl pb-6 rounded-lg">
+        <h4 class="my-8 font-bold text-left">Manage Users</h4>
 
         @livewire('flash-message')
 

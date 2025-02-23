@@ -10,7 +10,7 @@
             {{-- Show separate content for different user roles --}}
             @if (Auth::user()->role == 'admin')
                 {{-- Admin-specific Navigation Links --}}
-                <div class="w-screen max-w-5xl mb-4">
+                <div class="w-screen max-w-6xl px-8 mx-auto mb-4">
                     @if (request()->routeIs('dashboard-stats'))
                         @livewire('dashboard.user-stats')
                         <div class="flex items-stretch justify-between gap-4 my-4">
