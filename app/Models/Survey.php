@@ -28,4 +28,9 @@ class Survey extends Model
     {
         return $this->hasMany(Questions::class);
     }
+    public function recommendations()
+    {
+        return $this->hasMany(Recommendation::class, 'survey_id');
+    }
+
 }

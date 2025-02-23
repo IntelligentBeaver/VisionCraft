@@ -97,7 +97,7 @@ class QuestionCard extends Component
         $requestData = [
             'skills' => $this->answers[0] ?? '',
             'industry' => $this->answers[1] ?? '',
-            'functional_area' => $this->answers[2] ?? '',
+            'functional_area' => $this->answers[3] ?? '',
         ];
 
         // Step 4: Send data to Flask API

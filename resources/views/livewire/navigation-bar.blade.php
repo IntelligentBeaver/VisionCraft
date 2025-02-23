@@ -32,7 +32,11 @@
         <ul class="menu menu-horizontal px-1">
             @if ($isAuthenticated)
                 <li><a href="/" wire:navigate>Home</a></li>
-                <li><a class="px-4" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a></li>
+                @if (Auth::user()->role == 'admin')
+                    {{-- <li><a class="px-4" href="{{ route('admin.dashboard') }}" wire:navigate>Dashboard</a></li> --}}
+                @else
+                    <li><a class="px-4" href="{{ route('user-dashboard') }}" wire:navigate>Dashboard</a></li>
+                @endif
             @else
                 <li><a href="/" wire:navigate>Home</a></li>
                 <li><a class="px-4" href="{{ route('login') }}" wire:navigate>Login</a></li>
@@ -58,6 +62,13 @@
                         <li>
                             <a class="w-full" href="{{ route('dashboard.manage') }}" wire:navigate>Manage
                                 Users</a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role == 'user')
+                        <li>
+                            <a class="w-full" href="{{ route('user-survey-history') }}">
+                                View Survey History
+                            </a>
                         </li>
                     @endif
                     <li>

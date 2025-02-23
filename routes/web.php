@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SocialiteController;
+use App\Livewire\UserRecommendations;
 use Illuminate\Support\Facades\Route;
 
 
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\FlaskController;
 use App\Http\Controllers\ResController;
+use App\Livewire\UserSurveyHistory;
 
 Route::view('/', 'welcome');
 
@@ -55,6 +57,18 @@ Route::post('/logout', function () {
 Route::middleware(['auth'])->group(function () {
     Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
     Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/dashboard', UserRecommendations::class)->name('user-dashboard');
+    Route::get('/user/survey/history', UserSurveyHistory::class)->name('user-survey-history');
+    // Route::view('/user/placeholder', 'dashboard.manage-users')->name('dashboard.manage');
+});
+use App\Http\Livewire\ResumeOptimizer;
+use App\Livewire\ResumeOptimizer as LivewireResumeOptimizer;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/resume-upload', LivewireResumeOptimizer::class)->name('resume-upload');
 });
 
 // Route::get('/flask-view', [FlaskController::class, 'showFlaskData']);
