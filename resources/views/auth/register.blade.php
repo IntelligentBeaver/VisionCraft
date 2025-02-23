@@ -3,8 +3,8 @@
 @section('title', 'Register')
 
 @section('content')
-    <div class="mx-auto max-w-lg">
-        <h1 class="my-8 text-center font-bold">Register</h1>
+    <div class="max-w-lg mx-auto">
+        <h1 class="my-8 font-bold text-center">Register</h1>
         @livewire('auth.register')
     </div>
 @endsection
