@@ -1,4 +1,4 @@
-<div class="px-8 mx-auto shadow-sm navbar bg-base-100">
+<div class="navbar mx-auto bg-base-100 px-8 shadow-sm">
     <div class="navbar-start">
         {{-- <div class="dropdown">
             <div class="btn btn-ghost lg:hidden" role="button" tabindex="0">
@@ -28,8 +28,8 @@
         </a>
     </div>
 
-    <div class="flex navbar-center">
-        <ul class="px-1 menu menu-horizontal">
+    <div class="navbar-center flex">
+        <ul class="menu menu-horizontal px-1">
             @if ($isAuthenticated)
                 <li><a href="/" wire:navigate>Home</a></li>
                 @if (Auth::user()->role == 'admin')
@@ -38,7 +38,7 @@
                 @if (Auth::user()->role == 'user')
                     <li><a class="px-4" href="{{ route('user-dashboard') }}" wire:navigate>Dashboard</a></li>
                     <li>
-                        <a class="px-4" href="{{ route('resume-upload') }}">
+                        <a class="px-4" href="{{ route('resume-upload') }}" wire:navigate>
                             Optimize Resume
                         </a>
                     </li>
@@ -51,7 +51,7 @@
         </ul>
     </div>
 
-    <div class="space-x-2 navbar-end">
+    <div class="navbar-end space-x-2">
         @if ($isAuthenticated)
             <div class="dropdown dropdown-end">
                 <div class="avatar btn btn-circle btn-ghost" role="button" tabindex="0">
@@ -72,12 +72,12 @@
                     @endif
                     @if (Auth::user()->role == 'user')
                         <li>
-                            <a class="px-4" href="{{ route('resume-upload') }}">
+                            <a class="px-4" href="{{ route('resume-upload') }}" wire:navigate>
                                 Optimize Resume
                             </a>
                         </li>
                         <li>
-                            <a class="w-full" href="{{ route('user-survey-history') }}">
+                            <a class="w-full" href="{{ route('user-survey-history') }}" wire:navigate>
                                 View Survey History
                             </a>
                         </li>
