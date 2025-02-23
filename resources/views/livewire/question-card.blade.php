@@ -1,15 +1,15 @@
-<div class="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-xl" id="survey">
+<div class="max-w-4xl px-6 pb-6 mx-auto rounded-lg shadow-md" id="survey">
     @if ($question)
         <!-- Progress Bar -->
-        <div class="relative h-3 w-full overflow-hidden rounded-lg bg-gray-200">
-            <div class="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-300"
+        <div class="relative w-full h-3 overflow-hidden bg-gray-200 rounded-lg">
+            <div class="absolute top-0 left-0 h-full transition-all duration-300 bg-blue-500"
                 style="width: {{ $progress }}%;">
             </div>
         </div>
 
         <!-- Question Section -->
         <div class="mt-6 space-y-4">
-            <h2 class="text-lg font-semibold text-gray-800">Question {{ $currentQuestionIndex + 1 }}</h2>
+            <h4 class="font-bold">Question {{ $currentQuestionIndex + 1 }}</h4>
             <p class="">{{ is_string($question->question_text) ? $question->question_text : 'Invalid question' }}
             </p>
 
@@ -17,12 +17,12 @@
             <!-- Answer Input -->
             <div>
                 @if ($question->question_type == 'text')
-                    <input class="input input-bordered w-full" type="text"
+                    <input class="w-full input input-bordered" type="text"
                         value="{{ old('answers.' . $currentQuestionIndex, '') }}"
                         wire:model.defer="answers.{{ $currentQuestionIndex }}"
                         wire:key="input-{{ $currentQuestionIndex }}" placeholder="Your answer" />
                 @elseif ($question->question_type == 'select')
-                    <select class="select select-bordered w-full" wire:model.defer="answers.{{ $currentQuestionIndex }}"
+                    <select class="w-full select select-bordered" wire:model.defer="answers.{{ $currentQuestionIndex }}"
                         wire:key="select-{{ $currentQuestionIndex }}">
                         <option value="" disabled selected>Select an option</option>
 
@@ -40,7 +40,7 @@
 
                 <!-- Error Message (Animated) -->
                 @error("answers.{$currentQuestionIndex}")
-                    <p class="text-md animate-fadeIn mt-2 text-error">{{ $message }}</p>
+                    <p class="mt-2 text-md animate-fadeIn text-error">{{ $message }}</p>
                 @enderror
             </div>
             @if (session()->has('message'))
@@ -55,22 +55,22 @@
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="mt-6 flex justify-between">
+        <div class="flex justify-between mt-6">
             <button
-                class="rounded-lg bg-gray-500 px-4 py-2 text-white transition-all duration-200 hover:bg-gray-700 disabled:opacity-50"
+                class="px-4 py-2 text-white transition-all duration-200 bg-gray-500 rounded-lg hover:bg-gray-700 disabled:opacity-50"
                 wire:click="previousQuestion" @disabled($currentQuestionIndex == 0)>
                 Previous
             </button>
 
             @if ($currentQuestionIndex < $questions->count() - 1)
                 <button
-                    class="rounded-lg bg-blue-500 px-4 py-2 text-white transition-all duration-200 hover:bg-blue-700"
+                    class="px-4 py-2 text-white transition-all duration-200 bg-blue-500 rounded-lg hover:bg-blue-700"
                     wire:click="nextQuestion">
                     Next
                 </button>
             @else
                 <button
-                    class="rounded-lg bg-green-500 px-4 py-2 text-white transition-all duration-200 hover:bg-green-700"
+                    class="px-4 py-2 text-white transition-all duration-200 bg-green-500 rounded-lg hover:bg-green-700"
                     wire:click="submit">
                     Submit
                 </button>

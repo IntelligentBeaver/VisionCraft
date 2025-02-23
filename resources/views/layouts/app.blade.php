@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>@yield('title', 'Vision Craft')</title>
 
         <!-- Fonts -->
         <link href="https://fonts.bunny.net" rel="preconnect">
@@ -26,7 +26,7 @@
         <main class="mx-auto">
             @yield('content')
         </main>
-        <main class="mx-auto flex-1">
+        <main class="flex-1 mx-auto">
             @yield('dashboard_section')
         </main>
         <!-- Footer -->
