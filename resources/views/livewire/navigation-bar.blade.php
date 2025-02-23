@@ -34,8 +34,14 @@
                 <li><a href="/" wire:navigate>Home</a></li>
                 @if (Auth::user()->role == 'admin')
                     {{-- <li><a class="px-4" href="{{ route('admin.dashboard') }}" wire:navigate>Dashboard</a></li> --}}
-                @else
+                @endif
+                @if (Auth::user()->role == 'user')
                     <li><a class="px-4" href="{{ route('user-dashboard') }}" wire:navigate>Dashboard</a></li>
+                    <li>
+                        <a class="px-4" href="{{ route('resume-upload') }}">
+                            Optimize Resume
+                        </a>
+                    </li>
                 @endif
             @else
                 <li><a href="/" wire:navigate>Home</a></li>
@@ -65,6 +71,11 @@
                         </li>
                     @endif
                     @if (Auth::user()->role == 'user')
+                        <li>
+                            <a class="px-4" href="{{ route('resume-upload') }}">
+                                Optimize Resume
+                            </a>
+                        </li>
                         <li>
                             <a class="w-full" href="{{ route('user-survey-history') }}">
                                 View Survey History

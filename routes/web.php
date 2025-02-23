@@ -14,7 +14,9 @@ use App\Http\Controllers\FlaskController;
 use App\Http\Controllers\ResController;
 use App\Livewire\UserSurveyHistory;
 
-Route::view('/', 'welcome');
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
 
 // Socialite authentication
@@ -48,10 +50,13 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 });
 
-Route::post('/logout', function () {
+Route::post('/logout', function (Request $request) {
     Auth::logout();
-    return redirect('/');
-})->name(name: 'logout');
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('welcome'); // Ensure you have a named route for welcome
+})->name('logout');
 
 
 Route::middleware(['auth'])->group(function () {

@@ -45,6 +45,8 @@
             </div>
             @if (session()->has('message'))
                 <p class="mt-4 text-sm text-green-600">{{ session('message') }}</p>
+                <a class="btn btn-success text-success-content" href="{{ route('user-dashboard') }}">Go to Dahsboard to
+                    view</a>
             @endif
 
             @if (session()->has('error'))

@@ -20,7 +20,7 @@
 
             @if (Auth::user()->role == 'user')
                 {{-- User-specific Content --}}
-                <div class="mb-4 w-full max-w-6xl">
+                <div class="mb-4 w-full max-w-7xl">
 
                     {{-- Dynamically Load Livewire Component Based on Route --}}
                     @if (request()->routeIs('user-survey-history'))
@@ -36,18 +36,18 @@
                             <a class="btn btn-primary flex-1" href="{{ route('user-survey-history') }}">
                                 View Survey History
                             </a>
-                            <a class="btn btn-primary flex-1" href="{{ route('resume-upload') }}">
-                                Upload Resume
-                            </a>
+                            {{-- <a class="flex-1 btn btn-primary" href="{{ route('resume-upload') }}">
+                                Optimize Resume
+                            </a> --}}
                         </div>
                     @elseif (request()->routeIs('resume-upload'))
                         <div class="my-4 flex items-stretch justify-between gap-4 px-4">
                             <a class="btn btn-primary flex-1" href="{{ route('user-dashboard') }}">
                                 Go back to Dashboard
                             </a>
-                            <a class="btn btn-primary flex-1" href="{{ route('user-survey-history') }}">
+                            {{-- <a class="flex-1 btn btn-primary" href="{{ route('user-survey-history') }}">
                                 View Survey History
-                            </a>
+                            </a> --}}
                         </div>
                         @livewire('resume-optimizer')
                     @endif

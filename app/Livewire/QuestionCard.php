@@ -7,6 +7,7 @@ use App\Models\Industry;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use App\Models\Survey;
 use App\Models\Response;
 use App\Models\Recommendation;
@@ -57,6 +58,10 @@ class QuestionCard extends Component
 
     public function nextQuestion()
     {
+        if (!Auth::check()) {
+            Session::flash('error', 'You must be logged in to continue.');
+            return redirect()->route('login');
+        }
         $this->validateOnly("answers.{$this->currentQuestionIndex}");
 
         // 🔹 Ensure it's a string before moving forward
