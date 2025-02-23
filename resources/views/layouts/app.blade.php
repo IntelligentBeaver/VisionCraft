@@ -18,6 +18,23 @@
             <style>
             </style>
         @endif
+        <script>
+            function applySystemTheme() {
+                let systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                let savedTheme = localStorage.getItem("theme");
+
+                // Use saved theme if available; otherwise, use system preference
+                let theme = savedTheme ? savedTheme : (systemPrefersDark ? "dark" : "light");
+
+                document.documentElement.setAttribute("data-theme", theme);
+            }
+
+            applySystemTheme();
+
+            // Listen for system theme changes and update in real-time
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applySystemTheme);
+        </script>
+
     </head>
 
     <body class="font-sans antialiased">

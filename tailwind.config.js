@@ -76,6 +76,7 @@ export default {
                     "error-content": "#160300",
                 },
             },
+            "dark",
         ],
     },
 };
