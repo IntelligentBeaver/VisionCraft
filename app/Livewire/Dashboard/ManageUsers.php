@@ -6,7 +6,8 @@ use Livewire\Component;
 use App\Models\User;
 use Livewire\WithPagination;
 class ManageUsers extends Component
-{use WithPagination;
+{
+    use WithPagination;
 
     public $userId, $name, $email, $age, $location, $role;
     public $isEditing = false;

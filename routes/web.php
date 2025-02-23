@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\SocialiteController;
+use App\Livewire\Dashboard\CreateUser;
+use App\Livewire\Dashboard\ManageUsers;
+use App\Livewire\Dashboard\UserStats;
 use App\Livewire\UserRecommendations;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +66,14 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
     Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/stats', UserStats::class)->name('dashboard-stats');
+    Route::get('/admin/users/create', CreateUser::class)->name('dashboard-create');
+    Route::get('/admin/users/manage', ManageUsers::class)->name('dashboard-manage');
+    // Route::view('/user/placeholder', 'dashboard.manage-users')->name('dashboard.manage');
+});
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', UserRecommendations::class)->name('user-dashboard');

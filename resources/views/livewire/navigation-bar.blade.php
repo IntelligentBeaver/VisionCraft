@@ -1,4 +1,4 @@
-<div class="navbar mx-auto bg-base-100 px-8 shadow-sm">
+<div class="px-8 mx-auto shadow-sm navbar bg-base-100">
     <div class="navbar-start">
         {{-- <div class="dropdown">
             <div class="btn btn-ghost lg:hidden" role="button" tabindex="0">
@@ -28,12 +28,12 @@
         </a>
     </div>
 
-    <div class="navbar-center flex">
-        <ul class="menu menu-horizontal px-1">
+    <div class="flex navbar-center">
+        <ul class="px-1 menu menu-horizontal">
             @if ($isAuthenticated)
                 <li><a href="/" wire:navigate>Home</a></li>
                 @if (Auth::user()->role == 'admin')
-                    {{-- <li><a class="px-4" href="{{ route('admin.dashboard') }}" wire:navigate>Dashboard</a></li> --}}
+                    <li><a class="px-4" href="{{ route('dashboard-stats') }}" wire:navigate>Dashboard</a></li>
                 @endif
                 @if (Auth::user()->role == 'user')
                     <li><a class="px-4" href="{{ route('user-dashboard') }}" wire:navigate>Dashboard</a></li>
@@ -51,7 +51,7 @@
         </ul>
     </div>
 
-    <div class="navbar-end space-x-2">
+    <div class="space-x-2 navbar-end">
         @if ($isAuthenticated)
             <div class="dropdown dropdown-end">
                 <div class="avatar btn btn-circle btn-ghost" role="button" tabindex="0">

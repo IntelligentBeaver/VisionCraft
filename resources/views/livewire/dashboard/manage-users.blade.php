@@ -1,6 +1,6 @@
 <div class="flex justify-center">
-    <div class="w-full max-w-7xl rounded-lg p-6">
-        <h1 class="my-8 text-center font-bold">Manage Users</h1>
+    <div class="w-full px-6 pb-6 rounded-lg max-w-7xl">
+        <h1 class="my-8 font-bold text-center">Manage Users</h1>
 
         @livewire('flash-message')
 
@@ -63,13 +63,13 @@
         <!-- Edit User Form (Kept the Same Logic, Just Updated to DaisyUI Components) -->
         @if ($isEditing)
             <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div class="w-full max-w-lg rounded-lg bg-white p-6">
-                    <h3 class="mb-4 text-center font-bold">Edit User</h3>
+                <div class="w-full max-w-lg p-6 bg-white rounded-lg">
+                    <h3 class="mb-4 font-bold text-center">Edit User</h3>
 
                     <form wire:submit.prevent="updateUser">
                         <div class="mb-2">
                             <label class="block">Name</label>
-                            <input class="input input-bordered w-full" type="text" wire:model="name">
+                            <input class="w-full input input-bordered" type="text" wire:model="name">
                             @error('name')
                                 <span class="text-sm text-red-500">{{ $message }}</span>
                             @enderror
@@ -77,7 +77,7 @@
 
                         <div class="mb-2">
                             <label class="block">Email</label>
-                            <input class="input input-bordered w-full" type="email" wire:model="email">
+                            <input class="w-full input input-bordered" type="email" wire:model="email">
                             @error('email')
                                 <span class="text-sm text-red-500">{{ $message }}</span>
                             @enderror
@@ -85,7 +85,7 @@
 
                         <div class="mb-2">
                             <label class="block">Age</label>
-                            <input class="input input-bordered w-full" type="number" wire:model="age">
+                            <input class="w-full input input-bordered" type="number" wire:model="age">
                             @error('age')
                                 <span class="text-sm text-red-500">{{ $message }}</span>
                             @enderror
@@ -93,7 +93,7 @@
 
                         <div class="mb-2">
                             <label class="block">Location</label>
-                            <input class="input input-bordered w-full" type="text" wire:model="location">
+                            <input class="w-full input input-bordered" type="text" wire:model="location">
                             @error('location')
                                 <span class="text-sm text-red-500">{{ $message }}</span>
                             @enderror
@@ -101,7 +101,7 @@
 
                         <div class="mb-4">
                             <label class="block">Role</label>
-                            <select class="select select-bordered w-full" wire:model="role">
+                            <select class="w-full select select-bordered" wire:model="role">
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                             </select>
