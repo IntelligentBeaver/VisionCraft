@@ -1,21 +1,17 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResController;
 use App\Http\Controllers\SocialiteController;
 use App\Livewire\Dashboard\CreateUser;
 use App\Livewire\Dashboard\ManageUsers;
 use App\Livewire\Dashboard\UserStats;
+use App\Livewire\ResumeOptimizer;
 use App\Livewire\UserRecommendations;
-use Illuminate\Support\Facades\Route;
-
-
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ProfileController;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use App\Http\Controllers\FlaskController;
-use App\Http\Controllers\ResController;
 use App\Livewire\UserSurveyHistory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -71,45 +67,25 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/stats', UserStats::class)->name('dashboard-stats');
     Route::get('/admin/users/create', CreateUser::class)->name('dashboard-create');
     Route::get('/admin/users/manage', ManageUsers::class)->name('dashboard-manage');
-    // Route::view('/user/placeholder', 'dashboard.manage-users')->name('dashboard.manage');
 });
 
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', UserRecommendations::class)->name('user-dashboard');
     Route::get('/user/survey/history', UserSurveyHistory::class)->name('user-survey-history');
-    // Route::view('/user/placeholder', 'dashboard.manage-users')->name('dashboard.manage');
 });
-use App\Http\Livewire\ResumeOptimizer;
-use App\Livewire\ResumeOptimizer as LivewireResumeOptimizer;
 
+// Resume optimizer and job recommendations (backed by the Flask API)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/resume-upload', LivewireResumeOptimizer::class)->name('resume-upload');
+    Route::get('/resume-upload', ResumeOptimizer::class)->name('resume-upload');
+
+    Route::get('/upload-resume-form', [ResController::class, 'showResumeForm'])->name('resume.form');
+    Route::post('/upload-resume', [ResController::class, 'uploadResume'])->name('resume.upload');
+    Route::get('/download-resume/{filename}', [ResController::class, 'downloadResume'])->name('resume.download');
+
+    Route::get('/recommend-jobs-form', [ResController::class, 'showRecommendationForm'])->name('jobs.recommend.form');
+    Route::post('/recommend-jobs', [ResController::class, 'recommendJobs'])->name('jobs.recommend');
+
+    Route::view('/resume/process', 'resume_process');
+    Route::view('resume/upload', 'resume_upload');
 });
-
-// Route::get('/flask-view', [FlaskController::class, 'showFlaskData']);
-// Route::post('/get-recommendations', function (Request $request) {
-//     $response = Http::post('http://127.0.0.1:5000/recommend', [
-//         'skills' => $request->input('skills'),
-//         'industry' => $request->input('industry'),
-//         'functional_area' => $request->input('functional_area')
-//     ]);
-
-//     return response()->json($response->json());
-// });
-// // Route to display form
-// Route::get('/flask-form', [FlaskController::class, 'showForm']);
-
-// // Route to handle form submission and send data to Flask
-// Route::post('/send-to-flask', [FlaskController::class, 'sendToFlask']);
-
-Route::get('/upload-resume-form', [ResController::class, 'showResumeForm']);
-Route::post('/upload-resume', [ResController::class, 'uploadResume']);
-Route::get('/download-resume/{filename}', [ResController::class, 'downloadResume']);
-
-
-Route::get('/recommend-jobs-form', [ResController::class, 'showRecommendationForm']);
-Route::post('/recommend-jobs', [ResController::class, 'recommendJobs']);
-
-Route::view('/resume/process', 'resume_process');
-Route::view('resume/upload', 'resume_upload');

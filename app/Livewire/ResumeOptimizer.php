@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Models\Resume;
+use App\Services\FlaskClient;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Resume;
+use Throwable;
 
 class ResumeOptimizer extends Component
 {
@@ -15,82 +17,68 @@ class ResumeOptimizer extends Component
 
     public $resume;
     public $fileName = '';
-    public $downloadUrl; // URL to download the processed resume
+    public $processedResumeId; // ID of the resume generated in this session
 
-    public function uploadResume()
+    public function uploadResume(FlaskClient $flask)
     {
         $this->validate([
-            'resume' => 'required|mimes:pdf,doc,docx|max:2048', // Validate file type and size
+            // The Flask optimizer only parses PDFs.
+            'resume' => 'required|file|mimes:pdf|max:2048',
         ]);
 
-        // Get original file details
-        $filePath = $this->resume->getRealPath();
-        $originalName = $this->resume->getClientOriginalName();
-
         try {
-            // Send resume to Flask API
-            $response = Http::attach(
-                'resume',
-                file_get_contents($filePath),
-                $originalName
-            )->post('http://127.0.0.1:5000/upload_resume');
+            $processedFilename = $flask->optimizeResume(
+                file_get_contents($this->resume->getRealPath()),
+                $this->resume->getClientOriginalName(),
+            );
 
-            if ($response->failed()) {
-                session()->flash('error', 'Flask API error. Please try again.');
-                return;
-            }
+            $processedResume = $flask->downloadResume($processedFilename);
 
-            // Get the processed filename from Flask API
-            $responseData = $response->json();
-            $processedFilename = $responseData['filename'] ?? null;
-
-            if (!$processedFilename) {
-                session()->flash('error', 'Failed to retrieve processed resume filename.');
-                return;
-            }
-
-            // Construct the download URL from Flask
-            $downloadUrl = "http://127.0.0.1:5000/download/$processedFilename";
-
-            // Fetch the processed resume from Flask API
-            $processedResume = Http::get($downloadUrl);
-
-            if ($processedResume->failed()) {
-                session()->flash('error', 'Error downloading processed resume.');
-                return;
-            }
-
-            // Save the file in Laravel storage using the exact filename returned by Flask
+            // Private disk: resumes hold personal data and must not be publicly guessable.
             $storagePath = "resumes/$processedFilename";
-            Storage::disk('public')->put($storagePath, $processedResume->body());
+            Storage::disk('local')->put($storagePath, $processedResume->body());
 
-            // Save resume details in database
-            Resume::create([
+            $resume = Resume::create([
                 'user_id' => Auth::id(),
-                'filename' => $storagePath, // Store the actual processed filename
+                'filename' => $storagePath,
             ]);
 
-            // Set download URL for frontend
-            $this->downloadUrl = asset("storage/$storagePath");
+            $this->processedResumeId = $resume->id;
 
             session()->flash('message', 'Resume processed and saved successfully!');
-
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
+            Log::error('Resume optimization failed', ['exception' => $e]);
             session()->flash('error', 'Something went wrong. Please try again.');
         }
     }
+
+    public function download($id)
+    {
+        $resume = $this->ownedResume($id);
+        $disk = $this->diskFor($resume);
+
+        abort_unless($disk, 404);
+
+        return Storage::disk($disk)->download($resume->filename, basename($resume->filename));
+    }
+
     public function deleteResume($id)
     {
-        $resume = Resume::findOrFail($id);
+        $resume = $this->ownedResume($id);
 
-        // Delete the file from storage
-        Storage::disk('public')->delete($resume->filename);
+        if ($disk = $this->diskFor($resume)) {
+            Storage::disk($disk)->delete($resume->filename);
+        }
 
-        // Delete from database
         $resume->delete();
+
+        if ($this->processedResumeId == $id) {
+            $this->processedResumeId = null;
+        }
 
         session()->flash('message', 'Resume deleted successfully!');
     }
+
     public function clearFile()
     {
         $this->resume = null;
@@ -100,6 +88,24 @@ class ResumeOptimizer extends Component
     public function render()
     {
         $resumes = Resume::where('user_id', Auth::id())->latest()->get();
+
         return view('livewire.resume-optimizer', compact('resumes'));
+    }
+
+    private function ownedResume($id): Resume
+    {
+        return Resume::where('user_id', Auth::id())->findOrFail($id);
+    }
+
+    /** Older resumes were saved on the public disk; new ones live on the private disk. */
+    private function diskFor(Resume $resume): ?string
+    {
+        foreach (['local', 'public'] as $disk) {
+            if (Storage::disk($disk)->exists($resume->filename)) {
+                return $disk;
+            }
+        }
+
+        return null;
     }
 }
