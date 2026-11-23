@@ -19,7 +19,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                             </svg>
                         </div>
-                        <p class="mt-4 text-gray-500">Click to upload your resume (PDF/DOCX)</p>
+                        <p class="mt-4 text-gray-500">Click to upload your resume (PDF)</p>
                     </div>
                 </template>
 
@@ -65,10 +65,10 @@
                 <p class="text-gray-500">No file selected.</p>
             @endif
 
-            @if ($downloadUrl)
+            @if ($processedResumeId)
                 <div class="mt-6 rounded border-l-4 border-green-500 bg-green-100 p-4">
                     <p class="text-green-700">Your resume has been processed successfully.</p>
-                    <a class="btn btn-success mt-2" href="{{ $downloadUrl }}" download>Download Processed Resume</a>
+                    <button class="btn btn-success mt-2" wire:click="download({{ $processedResumeId }})">Download Processed Resume</button>
                 </div>
             @endif
 
@@ -77,10 +77,10 @@
             <ul class="mt-4">
                 @foreach ($resumes as $resume)
                     <li class="mt-2 flex items-center">
-                        <a class="flex-1 truncate text-blue-500 underline"
-                            href="{{ asset('storage/' . $resume->filename) }}" target="_blank">
+                        <button class="flex-1 truncate text-left text-blue-500 underline"
+                            wire:click="download({{ $resume->id }})">
                             {{ basename($resume->filename) }}
-                        </a>
+                        </button>
                         <button class="ml-2 text-red-500 hover:text-red-700"
                             wire:click="deleteResume({{ $resume->id }})">
                             ❌

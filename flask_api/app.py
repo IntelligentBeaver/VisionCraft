@@ -69,7 +69,9 @@ from flask_cors import CORS
 import pdfplumber
 import re
 import os
+import tempfile
 import time
+import uuid
 from docx import Document
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
@@ -91,6 +93,7 @@ with open("job_data.pkl", "rb") as file:
 # Initialize Flask App
 # -------------------------------
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # reject uploads over 5 MB
 CORS(app)  # Enable CORS for Laravel API to communicate
 
 UPLOAD_FOLDER = "saved_resumes"
@@ -161,14 +164,24 @@ def generate_ats_friendly_resume(sections, filename):
 
 @app.route('/upload_resume', methods=['POST'])
 def upload_resume():
-    file = request.files['resume']
-    file_path = os.path.join(UPLOAD_FOLDER, "uploaded_resume.pdf")
-    file.save(file_path)
+    file = request.files.get('resume')
+    if file is None or not file.filename.lower().endswith('.pdf'):
+        return jsonify({"error": "A PDF file is required"}), 400
 
-    text = extract_text_from_pdf(file_path)
+    # Unique temp file per request so concurrent uploads never overwrite each other.
+    fd, file_path = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        file.save(file_path)
+        text = extract_text_from_pdf(file_path)
+    except Exception:
+        return jsonify({"error": "Could not read the PDF"}), 400
+    finally:
+        os.remove(file_path)
+
     sections = extract_sections(text)
 
-    ats_filename = f"ATS_Resume_{int(time.time())}.docx"
+    ats_filename = f"ATS_Resume_{int(time.time())}_{uuid.uuid4().hex[:8]}.docx"
     ats_file_path = os.path.join(UPLOAD_FOLDER, ats_filename)
     generate_ats_friendly_resume(sections, ats_file_path)
 
@@ -188,7 +201,7 @@ def download_resume(filename):
 
 @app.route('/recommend', methods=['POST'])
 def recommend_jobs():
-    data = request.json
+    data = request.get_json(silent=True) or {}
     user_skills = data.get("skills", "")
     user_industry = data.get("industry", "")
     user_functional_area = data.get("functional_area", "")
@@ -217,4 +230,10 @@ def recommend_jobs():
     return jsonify({"recommendations": recommendations})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # Debug mode exposes the Werkzeug console (remote code execution), so it is
+    # opt-in only. Laravel calls this service server-side, so bind to localhost.
+    app.run(
+        host=os.environ.get("FLASK_HOST", "127.0.0.1"),
+        port=int(os.environ.get("FLASK_PORT", "5000")),
+        debug=os.environ.get("FLASK_DEBUG", "0") == "1",
+    )

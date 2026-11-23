@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Models\Res;
-use Illuminate\Container\Attributes\Auth;
+use App\Services\FlaskClient;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ResController extends Controller
 {
+    public function __construct(private FlaskClient $flask)
+    {
+    }
+
     public function showResumeForm()
     {
         return view('resume-upload');
@@ -18,56 +23,72 @@ class ResController extends Controller
     {
         return view('job-recommendation');
     }
+
     public function uploadResume(Request $request)
     {
+        $request->validate([
+            'resume' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
         $file = $request->file('resume');
 
-        // Send resume to Flask API
-        $response = Http::attach(
-            'resume',
-            file_get_contents($file),
-            $file->getClientOriginalName()
-        )->post('http://127.0.0.1:5000/upload_resume');
+        try {
+            $filename = $this->flask->optimizeResume($file->get(), $file->getClientOriginalName());
+        } catch (Throwable $e) {
+            Log::error('Resume optimization failed', ['exception' => $e]);
 
-        if ($response->failed()) {
-            return response()->json(['error' => 'Flask API error'], 500);
+            return back()->with('error', 'Resume service is unavailable. Please try again.');
         }
 
-        $responseData = $response->json();
-        $filename = $responseData['filename'];
+        Res::create([
+            'user_id' => $request->user()->id,
+            'filename' => $filename,
+        ]);
 
-        // Store resume filename in database
-        $resume = new Res();
-        $resume->user_id = \Illuminate\Support\Facades\Auth::id(); // Store logged-in user ID
-        $resume->filename = $filename;
-        $resume->save();
-
-        return redirect("http://127.0.0.1:5000/download/$filename");
-
-
-        // return response()->json([
-        //     'message' => 'Resume uploaded and processed successfully!',
-        //     'download_url' => url('/download-resume/' . $filename)
-        // ]);
+        return redirect()->route('resume.download', $filename);
     }
 
-    public function downloadResume($filename)
+    public function downloadResume(Request $request, string $filename)
     {
-        return redirect("http://127.0.0.1:5000/download/$filename");
+        // Users may only download resumes they generated.
+        $resume = Res::where('user_id', $request->user()->id)
+            ->where('filename', $filename)
+            ->firstOrFail();
+
+        try {
+            $file = $this->flask->downloadResume($resume->filename);
+        } catch (Throwable $e) {
+            Log::error('Resume download failed', ['exception' => $e]);
+            abort(502, 'Resume service is unavailable.');
+        }
+
+        return response()->streamDownload(
+            fn () => print($file->body()),
+            basename($resume->filename),
+            ['Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        );
     }
 
     public function recommendJobs(Request $request)
     {
-        $response = Http::post('http://127.0.0.1:5000/recommend', [
-            'skills' => $request->input('skills'),
-            'industry' => $request->input('industry'),
-            'functional_area' => $request->input('functional_area'),
+        $validated = $request->validate([
+            'skills' => 'required|string|max:1000',
+            'industry' => 'required|string|max:255',
+            'functional_area' => 'required|string|max:255',
         ]);
 
-        // Convert response to array
-        $recommendations = $response->json()['recommendations'] ?? [];
+        try {
+            $recommendations = $this->flask->recommend(
+                $validated['skills'],
+                $validated['industry'],
+                $validated['functional_area'],
+            );
+        } catch (Throwable $e) {
+            Log::error('Job recommendation failed', ['exception' => $e]);
 
-        // Return the view with the data
+            return back()->withInput()->with('error', 'Recommendation service is unavailable. Please try again.');
+        }
+
         return view('job-recommendation', compact('recommendations'));
     }
 }

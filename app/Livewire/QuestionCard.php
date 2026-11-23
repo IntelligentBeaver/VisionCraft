@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Models\Questions;
 use App\Models\Industry;
 use Livewire\Component;
-use Illuminate\Support\Facades\Http;
+use App\Services\FlaskClient;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\Survey;
@@ -81,6 +83,11 @@ class QuestionCard extends Component
 
     public function submit()
     {
+        if (!Auth::check()) {
+            Session::flash('error', 'You must be logged in to continue.');
+            return redirect()->route('login');
+        }
+
         $this->validate();
 
         // Step 1: Create a new survey for the user
@@ -106,8 +113,18 @@ class QuestionCard extends Component
         ];
 
         // Step 4: Send data to Flask API
-        $response = Http::post('http://127.0.0.1:5000/recommend', $requestData);
-        $recommendations = $response->json()['recommendations'] ?? [];
+        try {
+            $recommendations = app(FlaskClient::class)->recommend(
+                $requestData['skills'],
+                $requestData['industry'],
+                $requestData['functional_area'],
+            );
+        } catch (Throwable $e) {
+            Log::error('Job recommendation failed', ['exception' => $e]);
+            session()->flash('error', 'Survey saved, but recommendations are unavailable right now. Please try again later.');
+
+            return;
+        }
 
         // Step 5: Store API response in the recommendations table
         foreach ($recommendations as $recommendation) {

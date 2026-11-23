@@ -2,67 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
+use Laravel\Socialite\Facades\Socialite;
+use Throwable;
 
 class SocialiteController extends Controller
 {
+    private const PLACEHOLDER_IMAGE = 'images/avatar/placeholder.jpg';
+
     public function googleLogin()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    public function googleAuthenticationCallback()
+    public function googleAuthenticationCallback(Request $request): RedirectResponse
     {
-        try {
-            $googleUser = Socialite::driver('google')->user();
-
-            // Default image URL (your placeholder image)
-            $imageUrl = 'images/avatar/placeholder.jpg';
-
-            // Check if the user already exists with Google ID or email
-            $user = User::where('google_id', $googleUser->id)->first();
-            $userWithEmail = User::where('email', $googleUser->email)->first();
-
-            if ($userWithEmail) {
-                // If a user with the same email already exists, merge accounts
-                $userWithEmail->google_id = $googleUser->id;
-                $userWithEmail->image = $imageUrl; // Use the placeholder image
-                $userWithEmail->save();
-                Auth::login($userWithEmail);
-                return redirect()->route('dashboard');
-            }
-
-            if ($user) {
-                // If a user with the same Google ID already exists, login
-                $user->image = $imageUrl; // Use the placeholder image
-                $user->save();
-                Auth::login($user);
-                return redirect()->route('dashboard');
-            }
-
-            // Create a new user with the profile data and placeholder image
-            $userData = User::create([
-                'name' => $googleUser->name,
-                'email' => $googleUser->email,
-                'password' => Hash::make('Password@1234'),
-                'google_id' => $googleUser->id,
-                'image' => $imageUrl, // Store the placeholder image URL
-                'role'=>'user'
-            ]);
-
-            if ($userData) {
-                Auth::login($userData);
-                return redirect()->route('dashboard');
-            }
-
-        } catch (Exception $e) {
-            dd($e);
-        }
+        return $this->handleCallback($request, 'google', 'google_id');
     }
 
     public function linkedInLogin()
@@ -70,51 +33,68 @@ class SocialiteController extends Controller
         return Socialite::driver('linkedin-openid')->redirect();
     }
 
-    public function linkedInAuthenticationCallback()
+    public function linkedInAuthenticationCallback(Request $request): RedirectResponse
+    {
+        return $this->handleCallback($request, 'linkedin-openid', 'linkedin_id');
+    }
+
+    private function handleCallback(Request $request, string $driver, string $idColumn): RedirectResponse
     {
         try {
-            $linkedinUser = Socialite::driver('linkedin-openid')->user();
+            $oauthUser = Socialite::driver($driver)->user();
+        } catch (Throwable $e) {
+            Log::warning("OAuth login failed for {$driver}", ['exception' => $e]);
 
-            // Default image URL (your placeholder image)
-            $imageUrl = 'images/avatar/placeholder.jpg';
-
-            // Check if the user already exists with LinkedIn ID or email
-            $user = User::where('linkedin_id', $linkedinUser->id)->first();
-            $userWithEmail = User::where('email', $linkedinUser->email)->first();
-
-            if ($userWithEmail) {
-                // If a user with the same email already exists, merge accounts
-                $userWithEmail->linkedin_id = $linkedinUser->id;
-                $userWithEmail->image = $imageUrl; // Use the placeholder image
-                $userWithEmail->save();
-                Auth::login($userWithEmail);
-                return redirect()->route('dashboard');
-            }
-
-            if ($user) {
-                // If a user with the same LinkedIn ID already exists, login
-                $user->image = $imageUrl; // Use the placeholder image
-                $user->save();
-                Auth::login($user);
-                return redirect()->route('dashboard');
-            }
-
-            // Create a new user with the profile data and placeholder image
-            $userData = User::create([
-                'name' => $linkedinUser->name,
-                'email' => $linkedinUser->email,
-                'password' => Hash::make('password@123'),
-                'linkedin_id' => $linkedinUser->id,
-                'image' => $imageUrl, // Store the placeholder image URL
-            ]);
-
-            if ($userData) {
-                Auth::login($userData);
-                return redirect()->route('dashboard');
-            }
-
-        } catch (Exception $e) {
-            dd($e);
+            return redirect()->route('login')->with('error', 'Social login failed. Please try again.');
         }
+
+        // Returning user: already linked to this provider account.
+        $user = User::where($idColumn, $oauthUser->getId())->first();
+
+        if (! $user && $oauthUser->getEmail()) {
+            $existing = User::where('email', $oauthUser->getEmail())->first();
+
+            if ($existing) {
+                // Only link to an existing account when the provider has verified
+                // the email, otherwise anyone could take over that account.
+                if (! $this->emailIsVerified($oauthUser)) {
+                    return redirect()->route('login')
+                        ->with('error', 'This email is already registered. Log in with your password first.');
+                }
+
+                $existing->{$idColumn} = $oauthUser->getId();
+                $existing->save();
+                $user = $existing;
+            }
+        }
+
+        if (! $user) {
+            $user = User::create([
+                'name' => $oauthUser->getName() ?: 'User',
+                'email' => $oauthUser->getEmail(),
+                // OAuth users never log in with a password; store an unguessable one.
+                'password' => Hash::make(Str::random(64)),
+                $idColumn => $oauthUser->getId(),
+                'image' => self::PLACEHOLDER_IMAGE,
+                'role' => 'user',
+            ]);
+        }
+
+        if (! $user->image) {
+            $user->image = self::PLACEHOLDER_IMAGE;
+            $user->save();
+        }
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('welcome');
+    }
+
+    private function emailIsVerified(SocialiteUser $oauthUser): bool
+    {
+        $raw = method_exists($oauthUser, 'getRaw') ? $oauthUser->getRaw() : [];
+
+        return filter_var(Arr::get($raw, 'email_verified', false), FILTER_VALIDATE_BOOLEAN);
     }
 }
