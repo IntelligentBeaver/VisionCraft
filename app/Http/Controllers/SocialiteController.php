@@ -34,7 +34,7 @@ class SocialiteController extends Controller
                 $userWithEmail->image = $imageUrl; // Use the placeholder image
                 $userWithEmail->save();
                 Auth::login($userWithEmail);
-                return redirect()->route('dashboard');
+                return redirect()->route('welcome');
             }
 
             if ($user) {
@@ -42,7 +42,7 @@ class SocialiteController extends Controller
                 $user->image = $imageUrl; // Use the placeholder image
                 $user->save();
                 Auth::login($user);
-                return redirect()->route('dashboard');
+                return redirect()->route('welcome');
             }
 
             // Create a new user with the profile data and placeholder image
@@ -52,12 +52,12 @@ class SocialiteController extends Controller
                 'password' => Hash::make('Password@1234'),
                 'google_id' => $googleUser->id,
                 'image' => $imageUrl, // Store the placeholder image URL
-                'role'=>'user'
+                'role' => 'user'
             ]);
 
             if ($userData) {
                 Auth::login($userData);
-                return redirect()->route('dashboard');
+                return redirect()->route('welcome');
             }
 
         } catch (Exception $e) {
@@ -88,7 +88,7 @@ class SocialiteController extends Controller
                 $userWithEmail->image = $imageUrl; // Use the placeholder image
                 $userWithEmail->save();
                 Auth::login($userWithEmail);
-                return redirect()->route('dashboard');
+                return redirect()->route('welcome');
             }
 
             if ($user) {
@@ -96,7 +96,7 @@ class SocialiteController extends Controller
                 $user->image = $imageUrl; // Use the placeholder image
                 $user->save();
                 Auth::login($user);
-                return redirect()->route('dashboard');
+                return redirect()->route('welcome');
             }
 
             // Create a new user with the profile data and placeholder image
@@ -110,7 +110,7 @@ class SocialiteController extends Controller
 
             if ($userData) {
                 Auth::login($userData);
-                return redirect()->route('dashboard');
+                return redirect()->route('welcome');
             }
 
         } catch (Exception $e) {
