@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Livewire\Concerns\AuthorizesAdmin;
 use Livewire\Component;
 use App\Models\User;
 use Livewire\WithPagination;
 class ManageUsers extends Component
 {
-    use WithPagination;
+    use AuthorizesAdmin, WithPagination;
 
     public $userId, $name, $email, $age, $location, $role;
     public $isEditing = false;

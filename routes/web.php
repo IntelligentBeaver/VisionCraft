@@ -62,12 +62,12 @@ Route::post('/logout', function (Request $request) {
 })->name('logout');
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::view('/admin/create', 'dashboard.create-user')->name('dashboard.create');
     Route::view('/admin/manage', 'dashboard.manage-users')->name('dashboard.manage');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/stats', UserStats::class)->name('dashboard-stats');
     Route::get('/admin/users/create', CreateUser::class)->name('dashboard-create');
     Route::get('/admin/users/manage', ManageUsers::class)->name('dashboard-manage');

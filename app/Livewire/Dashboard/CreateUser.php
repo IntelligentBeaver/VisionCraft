@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Livewire\Concerns\AuthorizesAdmin;
 use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class CreateUser extends Component
 {
+    use AuthorizesAdmin;
+
     public $name, $email, $password, $role = 'user';
 
     public function createUser()

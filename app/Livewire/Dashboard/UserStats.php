@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Livewire\Concerns\AuthorizesAdmin;
 use Livewire\Component;
 use App\Models\User;
 
 class UserStats extends Component
 {
+    use AuthorizesAdmin;
+
     public $totalUsers;
     public $totalAdmins;
     public $totalRegularUsers;
